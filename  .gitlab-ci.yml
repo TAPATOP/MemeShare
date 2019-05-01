@@ -1,0 +1,13 @@
+stages:
+    - build
+#    - test
+    
+Building stage:
+    stage: build
+    script:
+        - // script here
+
+#Testing stage:
+#    stage: test
+#    script:
+#        - // script here
