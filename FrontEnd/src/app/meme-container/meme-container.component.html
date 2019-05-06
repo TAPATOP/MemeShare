@@ -3,9 +3,10 @@
 </p>
 
 <section *ngIf="memes">
-  <p *ngFor="let meme of memes">
-    {{ meme.getTitle() }}
-  </p>
+  <div *ngFor="let meme of memes">
+    <p> {{ meme.getTitle() }} </p>
+    <img src="{{ meme.getImageURL() }}" alt="fuck">
+  </div>
 </section>
 
 <p>

@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DataSourceService } from './data-source.service';
+import { MemeStorageService } from './meme-storage.service';
 
-describe('DataSourceService', () => {
+describe('MemeStorageService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: DataSourceService = TestBed.get(DataSourceService);
+    const service: MemeStorageService = TestBed.get(MemeStorageService);
     expect(service).toBeTruthy();
   });
 });

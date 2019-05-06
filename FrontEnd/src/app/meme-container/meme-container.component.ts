@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { DataSourceService } from '../data-source.service';
+import { MemeStorageService } from '../services/meme-storage.service';
+
+type rawMeme = Array<{title, image}>; // ASK: Is this okay?
 
 @Component({
   selector: 'app-meme-container',
@@ -9,16 +11,14 @@ import { DataSourceService } from '../data-source.service';
 })
 export class MemeContainerComponent implements OnInit {
 
-  memes: Meme[] = [];
+  private memes: Meme[] = [];
 
-  constructor(private data: DataSourceService) { }
+  constructor(private memeDataStorage: MemeStorageService) { }
 
   ngOnInit() {
-    this.data.getData().subscribe(response => {
-      let placeholder;
-      placeholder = response;
-      for (const meme of placeholder.memes) {
-        this.memes.push(new Meme(meme.title, meme.imageURL));
+    this.memeDataStorage.getData().subscribe((response: rawMeme) => {
+      for (const meme of response) {
+        this.memes.push(new Meme(meme.title, meme.image));
       }
     });
   }
@@ -35,5 +35,9 @@ class Meme {
 
   getTitle() {
     return this.title;
+  }
+
+  getImageURL() {
+    return this.imageURL;
   }
 }
