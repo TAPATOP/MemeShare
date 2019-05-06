@@ -1,3 +1,13 @@
 <p>
-  domain-selector works!
+  domain-selector lives!
+</p>
+
+<select *ngIf="domains.length > 0">
+  <option *ngFor="let domain of domains">
+    {{ domain.getName() }}
+  </option>
+</select>
+
+<p>
+  domain-selector dies!
 </p>

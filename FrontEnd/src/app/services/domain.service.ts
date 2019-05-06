@@ -8,9 +8,10 @@ export class DomainService {
   private sourceURL: string;
 
   constructor(private http: HttpClient) {
-    this.setSource('http://www.mocky.io/v2/5ccff1883200009b4400f918');
+    this.setSource('http://www.mocky.io/v2/5cd0214d3200005e0000fad6');
   }
 
+  // ASK: what the fug
   getData() {
     return this.http.get(this.sourceURL);
   }
