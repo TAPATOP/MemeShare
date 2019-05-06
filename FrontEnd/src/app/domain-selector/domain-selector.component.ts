@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { DomainService } from '../services/domain.service';
+import { MemeStorageService } from '../services/meme-storage.service';
 
 type RawDomainArray = Array<{name, address}>;
 
@@ -11,15 +12,25 @@ type RawDomainArray = Array<{name, address}>;
 })
 export class DomainSelectorComponent implements OnInit {
   domains: MemeDomain[] = [];
+  currentDomain: MemeDomain;
 
-  constructor(private data: DomainService) { }
+  constructor(private data: DomainService, private memeStorage: MemeStorageService) { }
 
   ngOnInit() {
     this.data.getData().subscribe((domainArray: RawDomainArray) => {
       for (const domain of domainArray) {
         this.domains.push(new MemeDomain(domain.name, domain.address));
       }
+      this.setDomain(this.domains[0]);
     });
+  }
+
+  setDomain(domain: MemeDomain) {
+    this.currentDomain = domain;
+  }
+
+  updateMemeService() {
+    this.memeStorage.setSource(this.currentDomain.getAddress());
   }
 }
 

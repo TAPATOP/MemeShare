@@ -1,0 +1,14 @@
+.meme-container {
+  background: #333333;
+}
+
+.meme {
+  display: inline-block;
+  background: #EEEEEE;
+  width: 25%;
+  margin: 1% 2%;
+}
+
+.meme img {
+  width: 80%;
+}

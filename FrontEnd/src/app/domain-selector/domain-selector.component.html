@@ -1,13 +1,24 @@
-<p>
-  domain-selector lives!
-</p>
+<section class="domain-selector">
+  <div class="dropdown">
+    <button class="dropbtn">
 
-<select *ngIf="domains.length > 0">
-  <option *ngFor="let domain of domains">
-    {{ domain.getName() }}
-  </option>
-</select>
+    <ng-container
+      *ngIf="currentDomain; then loggedIn; else loggedOut">
+    </ng-container>
 
-<p>
-  domain-selector dies!
-</p>
+    <ng-template #loggedIn>
+        {{ currentDomain.getName() }}
+    </ng-template>
+
+    <ng-template #loggedOut>
+        Please select meme domain
+    </ng-template>
+    </button>
+
+    <div class="dropdown-content">
+      <a *ngFor="let domain of domains" href="{{ domain.getAddress() }}">
+        {{ domain.getName() }}
+      </a>
+    </div>
+  </div>
+</section>

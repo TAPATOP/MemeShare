@@ -1,14 +1,6 @@
-<p>
-  meme-container lives!
-</p>
-
-<section *ngIf="memes">
-  <div *ngFor="let meme of memes">
-    <p> {{ meme.getTitle() }} </p>
+<section class="meme-container" *ngIf="memes">
+  <div class="meme" *ngFor="let meme of memes">
+    <div class="meme-title"> {{ meme.getTitle() }} </div>
     <img src="{{ meme.getImageURL() }}" alt="fuck">
   </div>
 </section>
-
-<p>
-  meme-container dies!
-</p>
