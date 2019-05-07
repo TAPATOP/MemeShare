@@ -7,19 +7,25 @@ type rawMeme = Array<{title, image}>; // ASK: Is this okay?
 @Component({
   selector: 'app-meme-container',
   templateUrl: './meme-container.component.html',
-  styleUrls: ['./meme-container.component.css']
+  styleUrls: ['./meme-container.component.css'],
 })
 export class MemeContainerComponent implements OnInit {
 
-  private memes: Meme[] = [];
+  private memes: Meme[];
 
-  constructor(private memeDataStorage: MemeStorageService) { }
+  constructor(
+    private memeDataStorage: MemeStorageService
+  ) { }
 
   ngOnInit() {
-    this.memeDataStorage.getData().subscribe((response: rawMeme) => {
-      for (const meme of response) {
-        this.memes.push(new Meme(meme.title, meme.image));
-      }
+    this.memeDataStorage.domainUpdater.subscribe( () => {
+      console.log('I\'m the container');
+      this.memeDataStorage.getData().subscribe((response: rawMeme) => {
+        this.memes = [];
+        for (const meme of response) {
+          this.memes.push(new Meme(meme.title, meme.image));
+        }
+      });
     });
   }
 }

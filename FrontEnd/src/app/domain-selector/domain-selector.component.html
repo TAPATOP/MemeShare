@@ -16,9 +16,9 @@
     </button>
 
     <div class="dropdown-content">
-      <a *ngFor="let domain of domains" href="{{ domain.getAddress() }}">
+      <div class="option" *ngFor="let domain of domains" (click)="setDomain(domain)">
         {{ domain.getName() }}
-      </a>
+      </div>
     </div>
   </div>
 </section>

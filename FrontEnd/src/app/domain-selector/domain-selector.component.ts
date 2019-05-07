@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 import { DomainService } from '../services/domain.service';
 import { MemeStorageService } from '../services/meme-storage.service';
@@ -14,10 +14,14 @@ export class DomainSelectorComponent implements OnInit {
   domains: MemeDomain[] = [];
   currentDomain: MemeDomain;
 
-  constructor(private data: DomainService, private memeStorage: MemeStorageService) { }
+  constructor(
+    private data: DomainService,
+    private memeStorage: MemeStorageService
+  ) { }
 
   ngOnInit() {
     this.data.getData().subscribe((domainArray: RawDomainArray) => {
+      console.log('I\'m the selector');
       for (const domain of domainArray) {
         this.domains.push(new MemeDomain(domain.name, domain.address));
       }
@@ -27,6 +31,8 @@ export class DomainSelectorComponent implements OnInit {
 
   setDomain(domain: MemeDomain) {
     this.currentDomain = domain;
+    this.memeStorage.setSource(domain.getAddress());
+    console.log('I\'m the selector');
   }
 
   updateMemeService() {
