@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { MemeContainerComponent } from './meme-container/meme-container.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { DomainSelectorComponent } from './domain-selector/domain-selector.component';
+import { PaginatorComponent } from './paginator/paginator.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MemeContainerComponent,
     HomePageComponent,
-    DomainSelectorComponent
+    DomainSelectorComponent,
+    PaginatorComponent
   ],
   imports: [
     BrowserModule,

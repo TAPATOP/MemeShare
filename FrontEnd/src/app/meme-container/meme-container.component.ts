@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 import { MemeStorageService } from '../services/meme-storage.service';
+import {PageCounterService} from '../services/page-counter.service';
 
-type rawMeme = Array<{title, image}>; // ASK: Is this okay?
+type rawMeme = Array<{title, image}>;
 
 @Component({
   selector: 'app-meme-container',
@@ -14,19 +15,30 @@ export class MemeContainerComponent implements OnInit {
   private memes: Meme[];
 
   constructor(
-    private memeDataStorage: MemeStorageService
+    private memeStorageService: MemeStorageService,
+    private pageCounterService: PageCounterService
   ) { }
 
   ngOnInit() {
-    this.memeDataStorage.domainUpdater.subscribe( () => {
-      console.log('I\'m the container');
-      this.memeDataStorage.getData().subscribe((response: rawMeme) => {
-        this.memes = [];
-        for (const meme of response) {
-          this.memes.push(new Meme(meme.title, meme.image));
-        }
-      });
+    this.memeStorageService.sourceChangeEmitter.subscribe( () => {
+      this.updateMemes();
     });
+  }
+
+  updateMemes() {
+    this.memeStorageService.getData().subscribe((response: rawMeme) => {
+      this.memes = [];
+      for (const meme of response) {
+        this.memes.push(new Meme(meme.title, meme.image));
+      }
+    });
+  }
+
+  setMaxPages() {
+    let maxPages = this.memeStorageService.getCountOfAllMemes() / this.pageCounterService.getMemePerPage();
+    if (maxPages * this.pageCounterService.getMemePerPage() !== this.memeStorageService.getCountOfAllMemes()) {
+      maxPages++;
+    }
   }
 }
 
