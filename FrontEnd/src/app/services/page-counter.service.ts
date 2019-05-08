@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {MemeStorageService} from './meme-storage.service';
 
 @Injectable({
@@ -7,6 +7,9 @@ import {MemeStorageService} from './meme-storage.service';
 export class PageCounterService {
   private currentPage = 1;
   private maxPages = 0;
+  private isActive: boolean;
+
+  @Output() isActiveChangeEmitter = new EventEmitter();
 
   constructor(private memeService: MemeStorageService) { }
 
@@ -20,6 +23,11 @@ export class PageCounterService {
     }
 
     this.currentPage = newPage;
+  }
+
+  setStatus(isActive: boolean) {
+    this.isActive = isActive;
+    this.isActiveChangeEmitter.emit();
   }
 
   incrementPage() {

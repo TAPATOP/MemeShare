@@ -19,24 +19,24 @@ export class MemeStorageService {
   }
 
   getData(pageNumber?: number) {
-    if (pageNumber != null || pageNumber >= 0) {
+    if (pageNumber != null && pageNumber >= 0) {
       return this.getDataPaged(pageNumber);
     }
-    return this.getDataNoParam();
+    return this.getDataPaged(1);
   }
 
-  getDataNoParam() {
-    let filterParam = this.filterParam();
-    if (filterParam) {
-      filterParam = filterParam.replace('&', '?');
-    }
+  // private getDataNoParam() {
+  //   let filterParam = this.filterParam();
+  //   if (filterParam) {
+  //     filterParam = filterParam.replace('&', '?');
+  //   }
+  //
+  //   const getRequest = this.sourceURL + filterParam;
+  //   console.log('Fetching this: ' + getRequest);
+  //   return this.http.get(getRequest);
+  // }
 
-    const getRequest = this.sourceURL + filterParam;
-    console.log('Fetching this: ' + getRequest);
-    return this.http.get(getRequest);
-  }
-
-  getDataPaged(pageNumber: number) {
+  private getDataPaged(pageNumber: number) {
     const memeIDLowBound = this.memePerPage * (pageNumber - 1);
     const memeIDHighBound = memeIDLowBound + this.memePerPage - 1;
     const getRequest =
