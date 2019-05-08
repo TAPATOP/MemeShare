@@ -8,9 +8,11 @@ import {PageCounterService} from './page-counter.service';
 export class MemeStorageService {
   private sourceURL: string;
   private memePerPage = 6;
-  private searchWord: string;
+  private filterWord = '';
 
   @Output() sourceChangeEmitter = new EventEmitter();
+  @Output() filterWordChangeEmitter = new EventEmitter();
+  @Output() memePerPageChangeEmmitter = new EventEmitter();
 
   constructor(private http: HttpClient) {
     this.setSource('http://www.mocky.io/v2/5ccffa323200009b4400f95d');
@@ -24,7 +26,12 @@ export class MemeStorageService {
   }
 
   getDataNoParam() {
-    const getRequest = this.sourceURL;
+    let filterParam = this.filterParam();
+    if (filterParam) {
+      filterParam = filterParam.replace('&', '?');
+    }
+
+    const getRequest = this.sourceURL + filterParam;
     console.log('Fetching this: ' + getRequest);
     return this.http.get(getRequest);
   }
@@ -35,10 +42,18 @@ export class MemeStorageService {
     const getRequest =
       this.sourceURL +
       '?meme-low-bound=' + memeIDLowBound +
-      '&meme-high-bound=' + memeIDHighBound
+      '&meme-high-bound=' + memeIDHighBound +
+      this.filterParam()
     ;
     console.log('Fetching this: ' + getRequest);
     return this.http.get(getRequest);
+  }
+
+  filterParam() {
+    if (this.filterWord) {
+      return '&filter-word=' + this.filterWord;
+    }
+    return '';
   }
 
   // ASK: subscribe to this or just return number?
@@ -54,5 +69,14 @@ export class MemeStorageService {
 
   getMemePerPage() {
     return this.memePerPage;
+  }
+
+  setMemePerPage(num: number) {
+    this.memePerPage = num;
+  }
+
+  setFilterWord(word: string) {
+    this.filterWord = word;
+    this.filterWordChangeEmitter.emit();
   }
 }
