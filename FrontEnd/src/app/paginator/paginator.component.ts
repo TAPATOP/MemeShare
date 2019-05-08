@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {PageCounterService} from '../services/page-counter.service';
 
 @Component({
   selector: 'app-paginator',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaginatorComponent implements OnInit {
 
-  constructor() { }
+  constructor(private pageCounterService: PageCounterService) { }
 
   ngOnInit() {
   }

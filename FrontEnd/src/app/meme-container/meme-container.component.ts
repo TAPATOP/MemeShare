@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { MemeStorageService } from '../services/meme-storage.service';
 import {PageCounterService} from '../services/page-counter.service';
+import { Meme } from '../classes/Meme';
 
 type rawMeme = Array<{title, image}>;
 
@@ -32,30 +33,5 @@ export class MemeContainerComponent implements OnInit {
         this.memes.push(new Meme(meme.title, meme.image));
       }
     });
-  }
-
-  setMaxPages() {
-    let maxPages = this.memeStorageService.getCountOfAllMemes() / this.pageCounterService.getMemePerPage();
-    if (maxPages * this.pageCounterService.getMemePerPage() !== this.memeStorageService.getCountOfAllMemes()) {
-      maxPages++;
-    }
-  }
-}
-
-class Meme {
-  private title: string;
-  private imageURL: string;
-
-  constructor(title: string, imageURL: string) {
-    this.title = title;
-    this.imageURL = imageURL;
-  }
-
-  getTitle() {
-    return this.title;
-  }
-
-  getImageURL() {
-    return this.imageURL;
   }
 }

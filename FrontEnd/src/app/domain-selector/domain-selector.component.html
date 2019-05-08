@@ -3,11 +3,11 @@
     <button class="dropbtn">
 
     <ng-container
-      *ngIf="currentDomain; then loggedIn; else loggedOut">
+      *ngIf="getCurrentDomain(); then loggedIn; else loggedOut">
     </ng-container>
 
     <ng-template #loggedIn>
-        {{ currentDomain.getName() }}
+        {{ getCurrentDomain().getName() }}
     </ng-template>
 
     <ng-template #loggedOut>
