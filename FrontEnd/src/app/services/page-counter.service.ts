@@ -1,19 +1,14 @@
 import { Injectable } from '@angular/core';
+import {MemeStorageService} from './meme-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PageCounterService {
-
-  private memePerPage = 6;
   private currentPage = 1;
   private maxPages = 0;
 
-  constructor() { }
-
-  getMemePerPage() {
-    return this.memePerPage;
-  }
+  constructor(private memeService: MemeStorageService) { }
 
   getCurrentPage() {
     return this.currentPage;
@@ -33,5 +28,12 @@ export class PageCounterService {
 
   decrementPage() {
     this.setPage(this.currentPage - 1);
+  }
+
+  setMaxPages() {
+    this.maxPages = this.memeService.getCountOfAllMemes() / this.memeService.getMemePerPage();
+    if (this.maxPages * this.memeService.getMemePerPage() !== this.memeService.getCountOfAllMemes()) {
+      this.maxPages++;
+    }
   }
 }

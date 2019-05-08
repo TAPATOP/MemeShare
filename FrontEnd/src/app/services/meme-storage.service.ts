@@ -7,15 +7,31 @@ import {PageCounterService} from './page-counter.service';
 })
 export class MemeStorageService {
   private sourceURL: string;
+  private memePerPage = 6;
+  private searchWord: string;
+
   @Output() sourceChangeEmitter = new EventEmitter();
 
-  constructor(private http: HttpClient, private pageCounter: PageCounterService) {
+  constructor(private http: HttpClient) {
     this.setSource('http://www.mocky.io/v2/5ccffa323200009b4400f95d');
   }
 
-  getData() {
-    const memeIDLowBound = this.pageCounter.getMemePerPage() * (this.pageCounter.getCurrentPage() - 1);
-    const memeIDHighBound = memeIDLowBound + this.pageCounter.getMemePerPage() - 1;
+  getData(pageNumber?: number) {
+    if (pageNumber != null || pageNumber >= 0) {
+      return this.getDataPaged(pageNumber);
+    }
+    return this.getDataNoParam();
+  }
+
+  getDataNoParam() {
+    const getRequest = this.sourceURL;
+    console.log('Fetching this: ' + getRequest);
+    return this.http.get(getRequest);
+  }
+
+  getDataPaged(pageNumber: number) {
+    const memeIDLowBound = this.memePerPage * (pageNumber - 1);
+    const memeIDHighBound = memeIDLowBound + this.memePerPage - 1;
     const getRequest =
       this.sourceURL +
       '?meme-low-bound=' + memeIDLowBound +
@@ -34,5 +50,9 @@ export class MemeStorageService {
   setSource(newURL: string) {
     this.sourceURL = newURL;
     this.sourceChangeEmitter.emit();
+  }
+
+  getMemePerPage() {
+    return this.memePerPage;
   }
 }
