@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { DomainService } from '../services/domain.service';
 import { MemeStorageService } from '../services/meme-storage.service';

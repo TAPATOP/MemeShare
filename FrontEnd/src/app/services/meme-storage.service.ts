@@ -1,70 +1,53 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {PageCounterService} from './page-counter.service';
+import {Meme} from '../classes/Meme';
+
+type rawMeme = Array<{title, image}>;
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemeStorageService {
   private sourceURL: string;
-  private memePerPage = 6;
-  private filterWord = '';
+  private memes: Meme[];
+  private memePerPage = 3;
 
-  @Output() sourceChangeEmitter = new EventEmitter();
+  @Output() loadedMemesEmitter = new EventEmitter();
   @Output() filterWordChangeEmitter = new EventEmitter();
-  @Output() memePerPageChangeEmmitter = new EventEmitter();
+  @Output() memePerPageChangeEmitter = new EventEmitter();
 
   constructor(private http: HttpClient) {
     this.setSource('http://www.mocky.io/v2/5ccffa323200009b4400f95d');
   }
 
-  getData(pageNumber?: number) {
-    if (pageNumber != null && pageNumber >= 0) {
-      return this.getDataPaged(pageNumber);
-    }
-    return this.getDataPaged(1);
-  }
-
-  // private getDataNoParam() {
-  //   let filterParam = this.filterParam();
-  //   if (filterParam) {
-  //     filterParam = filterParam.replace('&', '?');
-  //   }
-  //
-  //   const getRequest = this.sourceURL + filterParam;
-  //   console.log('Fetching this: ' + getRequest);
-  //   return this.http.get(getRequest);
-  // }
-
-  private getDataPaged(pageNumber: number) {
-    const memeIDLowBound = this.memePerPage * (pageNumber - 1);
-    const memeIDHighBound = memeIDLowBound + this.memePerPage - 1;
-    const getRequest =
-      this.sourceURL +
-      '?meme-low-bound=' + memeIDLowBound +
-      '&meme-high-bound=' + memeIDHighBound +
-      this.filterParam()
-    ;
+  getAllData() {
+    const getRequest = this.sourceURL;
+      // this.sourceURL + this.filterParam().replace('&', '?');
     console.log('Fetching this: ' + getRequest);
-    return this.http.get(getRequest);
+    return this.http.get(getRequest).subscribe((response: rawMeme) => {
+      this.memes = [];
+      for (const meme of response) {
+        this.memes.push(new Meme(meme.title, meme.image));
+      }
+      this.loadedMemesEmitter.emit();
+    });
   }
 
-  filterParam() {
-    if (this.filterWord) {
-      return '&filter-word=' + this.filterWord;
-    }
-    return '';
+  getMemes() {
+    return this.memes;
   }
 
-  // ASK: subscribe to this or just return number?
-  getCountOfAllMemes() {
-    return 60;
-    // return this.http.get(this.sourceURL + '/meme-count');
-  }
+  // filterParam() {
+  //   if (this.filterWord) {
+  //     return '&filter-word=' + this.filterWord;
+  //   }
+  //   return '';
+  // }
 
   setSource(newURL: string) {
     this.sourceURL = newURL;
-    this.sourceChangeEmitter.emit();
+    this.getAllData();
   }
 
   getMemePerPage() {
@@ -75,8 +58,7 @@ export class MemeStorageService {
     this.memePerPage = num;
   }
 
-  setFilterWord(word: string) {
-    this.filterWord = word;
-    this.filterWordChangeEmitter.emit();
+  getNumberOfMemes() {
+    return this.memes.length;
   }
 }

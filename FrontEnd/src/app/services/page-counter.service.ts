@@ -10,19 +10,36 @@ export class PageCounterService {
   private isActive: boolean;
 
   @Output() isActiveChangeEmitter = new EventEmitter();
+  @Output() changedPageEmitter = new EventEmitter();
 
-  constructor(private memeService: MemeStorageService) { }
+  constructor(private memeService: MemeStorageService) {
+    memeService.memePerPageChangeEmitter.subscribe(() => {
+      this.calculateNumberOfPages();
+      this.setPage(1);
+    });
+    memeService.loadedMemesEmitter.subscribe(() => {
+      this.calculateNumberOfPages();
+      this.setPage(1);
+    });
+  }
 
   getCurrentPage() {
     return this.currentPage;
   }
 
   setPage(newPage: number) {
+    console.log(newPage + ' ' + this.currentPage + ' ' + this.maxPages);
     if (newPage < 1 || newPage > this.maxPages) {
       return;
     }
 
-    this.currentPage = newPage;
+    if (newPage > this.maxPages) {
+      this.currentPage = this.maxPages;
+    } else {
+      this.currentPage = newPage;
+    }
+
+    this.changedPageEmitter.emit(this.currentPage);
   }
 
   setStatus(isActive: boolean) {
@@ -31,17 +48,22 @@ export class PageCounterService {
   }
 
   incrementPage() {
+    console.log('oi2');
     this.setPage(this.currentPage + 1);
   }
 
   decrementPage() {
+    console.log('oi3');
     this.setPage(this.currentPage - 1);
   }
 
-  setMaxPages() {
-    this.maxPages = this.memeService.getCountOfAllMemes() / this.memeService.getMemePerPage();
-    if (this.maxPages * this.memeService.getMemePerPage() !== this.memeService.getCountOfAllMemes()) {
+  calculateNumberOfPages() {
+    this.maxPages = Math.floor(this.memeService.getNumberOfMemes() / this.memeService.getMemePerPage());
+    if (this.maxPages * this.memeService.getMemePerPage() !== this.memeService.getNumberOfMemes()) {
+      console.log('oof)');
       this.maxPages++;
     }
+    console.log('calculate');
+    console.log(this.memeService.getNumberOfMemes() + ' ' + this.memeService.getMemePerPage() + ' ' + this.maxPages);
   }
 }
