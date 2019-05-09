@@ -22,7 +22,7 @@ export class PageCounterService {
   }
 
   reset() {
-    this.calculateNumberOfPages();
+    this.calculateMaxPages();
     this.setPage(1);
   }
 
@@ -52,7 +52,7 @@ export class PageCounterService {
     this.setPage(this.currentPage - 1);
   }
 
-  calculateNumberOfPages() {
+  calculateMaxPages() {
     this.maxPages = Math.floor(this.memeService.getNumberOfMemes() / this.memesPerPage);
     if (this.maxPages * this.memesPerPage !== this.memeService.getNumberOfMemes()) {
       this.maxPages++;
@@ -64,12 +64,15 @@ export class PageCounterService {
   }
 
   setMemesPerPage(num: number) {
-    console.log(this.maxPages + ' ' + num);
     if (num < 0) {
       return;
     }
-    console.log('oi');
+
     this.memesPerPage = num;
     this.memePerPageChangeEmitter.emit();
+  }
+
+  getMaxPages() {
+    return this.maxPages;
   }
 }

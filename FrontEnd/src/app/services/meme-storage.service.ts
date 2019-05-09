@@ -16,6 +16,7 @@ export class MemeStorageService {
   @Output() filterWordChangeEmitter = new EventEmitter();
 
   constructor(private http: HttpClient) {
+    this.memes = [];
   }
 
   getAllData() {
