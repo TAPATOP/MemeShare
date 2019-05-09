@@ -1,4 +1,6 @@
-<app-meme-per-page></app-meme-per-page>
+<section class="meme-container-header">
+  <app-meme-per-page></app-meme-per-page>
+</section>
 <section class="meme-container" *ngIf="memesForDisplay">
   <div class="meme" *ngFor="let meme of getMemesForDisplay('')">
     <div class="meme-title"> {{ meme.getTitle() }} </div>

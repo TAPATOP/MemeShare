@@ -13,7 +13,7 @@ export class MemePerPageComponent implements OnInit {
   constructor(private pageCounter: PageCounterService) { }
 
   ngOnInit() {
-    this.memesPerPageOptions = [1, 3, 6, 9];
+    this.memesPerPageOptions = [1, 3, 6, 9, 9001];
   }
 
   setMemesPerPage(num: number) {
