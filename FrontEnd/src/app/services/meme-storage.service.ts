@@ -11,7 +11,6 @@ type rawMeme = Array<{title, image}>;
 export class MemeStorageService {
   private sourceURL: string;
   private memes: Meme[];
-  private memePerPage = 3;
 
   @Output() loadedMemesEmitter = new EventEmitter();
   @Output() filterWordChangeEmitter = new EventEmitter();
@@ -48,14 +47,6 @@ export class MemeStorageService {
   setSource(newURL: string) {
     this.sourceURL = newURL;
     this.getAllData();
-  }
-
-  getMemePerPage() {
-    return this.memePerPage;
-  }
-
-  setMemePerPage(num: number) {
-    this.memePerPage = num;
   }
 
   getNumberOfMemes() {

@@ -6,6 +6,7 @@ import {MemeStorageService} from './meme-storage.service';
 })
 export class PageCounterService {
   private currentPage = 1;
+  private memesPerPage = 3;
   private maxPages = 0;
   private isActive: boolean;
 
@@ -58,12 +59,16 @@ export class PageCounterService {
   }
 
   calculateNumberOfPages() {
-    this.maxPages = Math.floor(this.memeService.getNumberOfMemes() / this.memeService.getMemePerPage());
-    if (this.maxPages * this.memeService.getMemePerPage() !== this.memeService.getNumberOfMemes()) {
+    this.maxPages = Math.floor(this.memeService.getNumberOfMemes() / this.memesPerPage);
+    if (this.maxPages * this.memesPerPage !== this.memeService.getNumberOfMemes()) {
       console.log('oof)');
       this.maxPages++;
     }
     console.log('calculate');
-    console.log(this.memeService.getNumberOfMemes() + ' ' + this.memeService.getMemePerPage() + ' ' + this.maxPages);
+    console.log(this.memeService.getNumberOfMemes() + ' ' + this.memesPerPage + ' ' + this.maxPages);
+  }
+
+  getMemesPerPage() {
+    return this.memesPerPage;
   }
 }

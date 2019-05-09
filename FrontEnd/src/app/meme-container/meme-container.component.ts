@@ -34,8 +34,8 @@ export class MemeContainerComponent implements OnInit {
   }
 
   getMemesForDisplay(filter: string) {
-    const lowerMemeIDBound = (this.pageCounterService.getCurrentPage() - 1) * this.memeStorageService.getMemePerPage();
-    const highMemeIDBound = lowerMemeIDBound + this.memeStorageService.getMemePerPage();
+    const lowerMemeIDBound = (this.pageCounterService.getCurrentPage() - 1) * this.pageCounterService.getMemesPerPage();
+    const highMemeIDBound = lowerMemeIDBound + this.pageCounterService.getMemesPerPage();
 
     const filteredMemes: Meme[] = this.filterMemes(this.memeStorageService.getMemes(), filter.toLowerCase(), highMemeIDBound);
     return filteredMemes.slice(lowerMemeIDBound, highMemeIDBound);
