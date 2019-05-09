@@ -3,19 +3,23 @@ import { Component, OnInit } from '@angular/core';
 import { MemeStorageService } from '../services/meme-storage.service';
 import { PageCounterService } from '../services/page-counter.service';
 import { Meme } from '../classes/Meme';
+import { FilterComponent } from '../filter/filter.component';
+import {FilterService} from '../services/filter.service';
 
 @Component({
   selector: 'app-meme-container',
   templateUrl: './meme-container.component.html',
   styleUrls: ['./meme-container.component.css'],
+  providers: [FilterComponent]
 })
 export class MemeContainerComponent implements OnInit {
-
   private memesForDisplay: Meme[];
 
   constructor(
     private memeStorageService: MemeStorageService,
-    private pageCounterService: PageCounterService
+    private pageCounterService: PageCounterService,
+    private filterComponent: FilterComponent,
+    private filterService: FilterService
   ) { }
 
   ngOnInit() {
@@ -28,37 +32,22 @@ export class MemeContainerComponent implements OnInit {
     this.pageCounterService.memePerPageChangeEmitter.subscribe(() => {
       this.updateMemes();
     });
+    this.filterService.filterTextChangeEmitter.subscribe(() => {
+      console.log('filter changed');
+      this.updateMemes();
+    });
   }
 
   updateMemes() {
-    this.memesForDisplay = this.getMemesForDisplay('');
+    this.memesForDisplay = this.getMemesForDisplay();
   }
 
-  getMemesForDisplay(filter: string) {
+  getMemesForDisplay() {
     const lowerMemeIDBound = (this.pageCounterService.getCurrentPage() - 1) * this.pageCounterService.getMemesPerPage();
     const highMemeIDBound = lowerMemeIDBound + this.pageCounterService.getMemesPerPage();
 
-    const filteredMemes: Meme[] = this.filterMemes(this.memeStorageService.getMemes(), filter.toLowerCase(), highMemeIDBound);
+    const filteredMemes: Meme[] =
+      this.filterComponent.filterMemes(this.memeStorageService.getMemes(), highMemeIDBound);
     return filteredMemes.slice(lowerMemeIDBound, highMemeIDBound);
-  }
-
-  filterMemes(memes: Meme[], filter: string, sizeForStop: number) {
-    const filteredMemes: Meme[] = [];
-    for (const meme of memes) {
-      if (filteredMemes.length > sizeForStop) {
-        break;
-      }
-      if (this.matchesFilter(meme, filter)) {
-        filteredMemes.push(meme);
-      }
-    }
-    return filteredMemes;
-  }
-
-  matchesFilter(meme: Meme, filter: string) {
-    if (null === filter || '' === filter) {
-      return true;
-    }
-    return meme.getTitle().toLowerCase().includes(filter);
   }
 }

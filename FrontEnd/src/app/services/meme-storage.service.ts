@@ -1,6 +1,5 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {PageCounterService} from './page-counter.service';
 import {Meme} from '../classes/Meme';
 
 type rawMeme = Array<{title, image}>;
@@ -21,7 +20,6 @@ export class MemeStorageService {
 
   getAllData() {
     const getRequest = this.sourceURL;
-      // this.sourceURL + this.filterParam().replace('&', '?');
     console.log('Fetching this: ' + getRequest);
     return this.http.get(getRequest).subscribe((response: rawMeme) => {
       this.memes = [];
@@ -35,13 +33,6 @@ export class MemeStorageService {
   getMemes() {
     return this.memes;
   }
-
-  // filterParam() {
-  //   if (this.filterWord) {
-  //     return '&filter-word=' + this.filterWord;
-  //   }
-  //   return '';
-  // }
 
   setSource(newURL: string) {
     this.sourceURL = newURL;

@@ -8,6 +8,8 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { DomainSelectorComponent } from './domain-selector/domain-selector.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { MemePerPageComponent } from './meme-per-page/meme-per-page.component';
+import { FilterComponent } from './filter/filter.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,11 +18,13 @@ import { MemePerPageComponent } from './meme-per-page/meme-per-page.component';
     HomePageComponent,
     DomainSelectorComponent,
     PaginatorComponent,
-    MemePerPageComponent
+    MemePerPageComponent,
+    FilterComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
