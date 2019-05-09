@@ -21,11 +21,9 @@ export class MemeContainerComponent implements OnInit {
   ngOnInit() {
     this.memeStorageService.loadedMemesEmitter.subscribe( () => {
       this.updateMemes();
-      console.log('wwwwww2 ');
     });
     this.pageCounterService.changedPageEmitter.subscribe(() => {
       this.updateMemes();
-      console.log('wwwwww ');
     });
   }
 
