@@ -7,6 +7,7 @@ import { MemeContainerComponent } from './meme-container/meme-container.componen
 import { HomePageComponent } from './home-page/home-page.component';
 import { DomainSelectorComponent } from './domain-selector/domain-selector.component';
 import { PaginatorComponent } from './paginator/paginator.component';
+import { MemePerPageComponent } from './meme-per-page/meme-per-page.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { PaginatorComponent } from './paginator/paginator.component';
     MemeContainerComponent,
     HomePageComponent,
     DomainSelectorComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    MemePerPageComponent
   ],
   imports: [
     BrowserModule,

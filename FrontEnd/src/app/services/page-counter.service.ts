@@ -8,20 +8,22 @@ export class PageCounterService {
   private currentPage = 1;
   private memesPerPage = 3;
   private maxPages = 0;
-  private isActive: boolean;
 
-  @Output() isActiveChangeEmitter = new EventEmitter();
   @Output() changedPageEmitter = new EventEmitter();
+  @Output() memePerPageChangeEmitter = new EventEmitter();
 
   constructor(private memeService: MemeStorageService) {
-    memeService.memePerPageChangeEmitter.subscribe(() => {
-      this.calculateNumberOfPages();
-      this.setPage(1);
+    this.memePerPageChangeEmitter.subscribe(() => {
+      this.reset();
     });
     memeService.loadedMemesEmitter.subscribe(() => {
-      this.calculateNumberOfPages();
-      this.setPage(1);
+      this.reset();
     });
+  }
+
+  reset() {
+    this.calculateNumberOfPages();
+    this.setPage(1);
   }
 
   getCurrentPage() {
@@ -42,11 +44,6 @@ export class PageCounterService {
     this.changedPageEmitter.emit(this.currentPage);
   }
 
-  setStatus(isActive: boolean) {
-    this.isActive = isActive;
-    this.isActiveChangeEmitter.emit();
-  }
-
   incrementPage() {
     this.setPage(this.currentPage + 1);
   }
@@ -64,5 +61,15 @@ export class PageCounterService {
 
   getMemesPerPage() {
     return this.memesPerPage;
+  }
+
+  setMemesPerPage(num: number) {
+    console.log(this.maxPages + ' ' + num);
+    if (num < 0) {
+      return;
+    }
+    console.log('oi');
+    this.memesPerPage = num;
+    this.memePerPageChangeEmitter.emit();
   }
 }

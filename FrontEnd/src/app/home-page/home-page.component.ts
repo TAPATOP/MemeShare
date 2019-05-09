@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {PageCounterService} from '../services/page-counter.service';
 
 @Component({
   selector: 'app-home-page',

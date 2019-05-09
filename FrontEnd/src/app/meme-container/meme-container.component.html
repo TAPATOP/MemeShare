@@ -1,7 +1,8 @@
+<app-meme-per-page></app-meme-per-page>
 <section class="meme-container" *ngIf="memesForDisplay">
   <div class="meme" *ngFor="let meme of getMemesForDisplay('')">
     <div class="meme-title"> {{ meme.getTitle() }} </div>
-    <img src="{{ meme.getImageURL() }}" alt="fuck">
+    <img src="{{ meme.getImageURL() }}" alt="I hope you can't see this">
   </div>
 </section>
 <app-paginator></app-paginator>

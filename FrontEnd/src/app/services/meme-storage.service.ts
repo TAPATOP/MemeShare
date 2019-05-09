@@ -14,10 +14,8 @@ export class MemeStorageService {
 
   @Output() loadedMemesEmitter = new EventEmitter();
   @Output() filterWordChangeEmitter = new EventEmitter();
-  @Output() memePerPageChangeEmitter = new EventEmitter();
 
   constructor(private http: HttpClient) {
-    this.setSource('http://www.mocky.io/v2/5ccffa323200009b4400f95d');
   }
 
   getAllData() {

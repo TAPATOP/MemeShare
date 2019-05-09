@@ -1,0 +1,10 @@
+<div class="dropdown">
+  <button class="dropbtn">
+  </button>
+
+  <div class="dropdown-content">
+    <div class="option" *ngFor="let number of memesPerPageOptions" (click)="setMemesPerPage(number)">
+      {{ number }}
+    </div>
+  </div>
+</div>

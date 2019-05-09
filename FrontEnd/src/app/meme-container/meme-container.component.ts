@@ -25,6 +25,9 @@ export class MemeContainerComponent implements OnInit {
     this.pageCounterService.changedPageEmitter.subscribe(() => {
       this.updateMemes();
     });
+    this.pageCounterService.memePerPageChangeEmitter.subscribe(() => {
+      this.updateMemes();
+    });
   }
 
   updateMemes() {
