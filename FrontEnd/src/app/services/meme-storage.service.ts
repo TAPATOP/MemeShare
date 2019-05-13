@@ -1,6 +1,7 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Meme} from '../classes/Meme';
+import {DomainService} from './domain.service';
 
 type rawMeme = Array<{title, image}>;
 
@@ -14,8 +15,11 @@ export class MemeStorageService {
   @Output() loadedMemesEmitter = new EventEmitter();
   @Output() filterWordChangeEmitter = new EventEmitter();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private domainService: DomainService) {
     this.memes = [];
+    this.domainService.changedDomainEmitter.subscribe((newDomain) => {
+      this.setSource(newDomain.getAddress());
+    });
   }
 
   getAllData() {

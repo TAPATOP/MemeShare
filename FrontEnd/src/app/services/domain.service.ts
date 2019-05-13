@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {MemeDomain} from '../classes/MemeDomain';
 
@@ -11,6 +11,7 @@ export class DomainService {
   private sourceURL: string;
   private currentDomain: MemeDomain;
   domains: MemeDomain[] = [];
+  @Output() changedDomainEmitter = new EventEmitter<MemeDomain>();
 
   constructor(private http: HttpClient) {
     this.setSource('http://www.mocky.io/v2/5cd138cb3300003528b12775?albatros=dva');

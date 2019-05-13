@@ -11,8 +11,7 @@ import { MemeDomain } from '../classes/MemeDomain';
 })
 export class DomainSelectorComponent implements OnInit {
   constructor(
-    private domainService: DomainService,
-    private memeStorage: MemeStorageService
+    private domainService: DomainService
   ) { }
 
   ngOnInit() {
@@ -21,7 +20,7 @@ export class DomainSelectorComponent implements OnInit {
 
   setDomain(domain: MemeDomain) {
     this.domainService.setCurrentDomain(domain);
-    this.memeStorage.setSource(domain.getAddress());
+    this.domainService.changedDomainEmitter.emit(domain);
   }
 
   getCurrentDomain() {
