@@ -1,5 +1,7 @@
 package com.vmware.talentboost.backend;
 
+import com.vmware.talentboost.backend.exceptions.FileCouldntBeDeletedException;
+import com.vmware.talentboost.backend.exceptions.MemeDoesntExistException;
 import com.vmware.talentboost.backend.exceptions.NoMemesFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +34,6 @@ public class MemeModel {
         for (File file : files) {
             if (file.isFile()) {
                 String url = file.getAbsolutePath();
-                url = url.replace('\\', '/');
                 String memeTitle = removeFileExtension(file.getName());
                 memes.put(memeTitle, new Meme(memeTitle, url));
                 System.out.println(url);
@@ -47,8 +48,21 @@ public class MemeModel {
         return memes.values().toArray(new Meme[0]);
     }
 
-    public Meme getMeme(String memeName) {
-        return memes.get(memeName);
+    public Meme getMeme(String memeName) throws MemeDoesntExistException {
+        Meme meme = memes.get(memeName);
+        if(meme == null) {
+            throw new MemeDoesntExistException("This meme doesnt exist");
+        }
+        return meme;
+    }
+
+    public void deleteMeme(String memeName) throws MemeDoesntExistException, FileCouldntBeDeletedException {
+        Meme meme = getMeme(memeName);
+        File fileForDeletion = new File(meme.getImageURL());
+        if(!fileForDeletion.delete()) {
+            throw new FileCouldntBeDeletedException("Couldn't delete the file");
+        }
+        memes.remove(memeName);
     }
 
     private String removeFileExtension(String fileName) {

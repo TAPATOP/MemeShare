@@ -7,19 +7,19 @@ import java.io.IOException;
 public class Meme {
 
     private final String title;
-    private final String image;
+    private final String imageURL;
 
-    public Meme(String title, String image) {
+    public Meme(String title, String imageURL) {
         this.title = title;
-        this.image = image;
+        this.imageURL = imageURL;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
     public static String JSONify(Meme[] memes) {

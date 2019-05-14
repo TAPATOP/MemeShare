@@ -9,8 +9,11 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.vmware.talentboost.backend.exceptions.CannotGetOwnIPException;
+import com.vmware.talentboost.backend.exceptions.FileCouldntBeDeletedException;
+import com.vmware.talentboost.backend.exceptions.MemeDoesntExistException;
 import com.vmware.talentboost.backend.exceptions.NoMemesFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,22 +79,31 @@ public class MemeServerController {
         return ResponseEntity.status(404).headers(responseHeaders).body("{}");
     }
 
-    @RequestMapping("/delete")
-    public ResponseEntity<String> deleteMeme(@RequestParam(value="meme-title", defaultValue="") String memeTitle) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteMeme(
+            @RequestParam(value="meme-title", defaultValue="") String memeTitle
+    ) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
-        String body;
-        if (!memeTitle.equals("")) {
-            body = Meme.JSONify(new Meme[]{memeModel.getMeme(memeTitle)});
-        } else {
-            try {
-                body = Meme.JSONify(memeModel.getMemes());
-            } catch (NoMemesFoundException e) {
-                body = "";
-                e.printStackTrace();
-            }
+        if (memeTitle.equals("")) {
+            return ResponseEntity.status(400)
+                    .headers(responseHeaders)
+                    .body("Empty meme for deletion title");
         }
 
+        try {
+            memeModel.deleteMeme(memeTitle);
+        } catch (MemeDoesntExistException e) {
+            return ResponseEntity.status(404)
+                    .headers(responseHeaders)
+                    .body(e.getMessage());
+        } catch (FileCouldntBeDeletedException e) {
+            return ResponseEntity.status(409)
+                    .headers(responseHeaders)
+                    .body(e.getMessage());
+        }
+
+        String body = memeTitle + " successfully deleted!";
         return ResponseEntity.ok()
                 .headers(responseHeaders)
                 .body(body);
