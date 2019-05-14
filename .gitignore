@@ -2,3 +2,7 @@ FrontEnd/node_modules
 FrontEnd/e2e
 BackEndResources/
 *.zip
+*.jpeg
+*.jpg
+*.xml
+*/.idea/*
