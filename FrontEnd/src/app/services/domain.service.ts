@@ -14,7 +14,10 @@ export class DomainService {
   @Output() changedDomainEmitter = new EventEmitter<MemeDomain>();
 
   constructor(private http: HttpClient) {
-    this.setSource('http://www.mocky.io/v2/5cd138cb3300003528b12775?albatros=dva');
+    this.setSource('http://www.mocky.io/v2/5cd983e43000006621c016c6');
+    this.http.get('http://localhost:8080/meme', {responseType: 'json'}).subscribe((data) => {
+      console.log(data);
+    });
   }
 
   loadDomains() {
