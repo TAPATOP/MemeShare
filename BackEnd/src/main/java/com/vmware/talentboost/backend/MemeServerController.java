@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,15 +36,15 @@ public class MemeServerController {
     private String title;
     @Value("${domains.host.properties}")
     String domainsHost;
-    @Value("${my.memes.location}")
-    private String memesURL;
+    private final
+    MemeModel memeModel;
 
     private int id = 2;
 
-//    @Autowired
-//    MemeServerController(String domainsHost) {
-//        this.domainsHost = domainsHost;
-//    }
+    @Autowired
+    public MemeServerController(MemeModel memeModel) {
+        this.memeModel = memeModel;
+    }
 
     @RequestMapping("/greeting")
     public Meme greeting(@RequestParam(value="name", defaultValue="World") String name) {
@@ -62,50 +63,50 @@ public class MemeServerController {
 
     @GetMapping("/meme")
     public ResponseEntity<String> sendAllMemes() {
-        try {
-            getAllMemes();
-        } catch (NoMemesFoundException e) {
-            e.printStackTrace();
-        }
-
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
 
         try {
             return ResponseEntity.ok()
                     .headers(responseHeaders)
-                    .body(Meme.JSONify(getAllMemes()));
+                    .body(Meme.JSONify(memeModel.getMemes()));
         } catch (NoMemesFoundException e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok().headers(responseHeaders).body("{}");
+        return ResponseEntity.status(404).headers(responseHeaders).body("{}");
     }
 
-    private Meme[] getAllMemes() throws NoMemesFoundException {
-        File folder = new File(memesURL);
-        File[] files = folder.listFiles();
-        if (files == null) {
-            throw new NoMemesFoundException("I couldn't find any memes mate");
-        }
-
-        Meme[] memes = new Meme[files.length];
-
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) {
-                String url = files[i].getAbsolutePath();
-                url = url.replace('\\','/');
-                memes[i] = new Meme(removeFileExtention(files[i].getName()), url);
-                System.out.println(files[i].getAbsolutePath());
+    @RequestMapping("/delete")
+    public ResponseEntity<String> deleteMeme(@RequestParam(value="meme-title", defaultValue="") String memeTitle) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
+        String body;
+        if (!memeTitle.equals("")) {
+            body = Meme.JSONify(new Meme[]{memeModel.getMeme(memeTitle)});
+        } else {
+            try {
+                body = Meme.JSONify(memeModel.getMemes());
+            } catch (NoMemesFoundException e) {
+                body = "";
+                e.printStackTrace();
             }
         }
 
-        return memes;
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(body);
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void fun() {
-        System.out.println(memesURL + " " + title + " " + domainsHost);
+        try {
+            System.out.println(Arrays.toString(memeModel.getMemes()) + " " + title + " " + domainsHost);
+        } catch (NoMemesFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
+
+//    @EventListener(ApplicationReadyEvent.class)
     public int register() throws CannotGetOwnIPException {
         RestTemplate restTemplate = new RestTemplate();
         String request =
@@ -139,10 +140,6 @@ public class MemeServerController {
 
         System.out.println(response.toString());
         return response.getStatusCodeValue();
-    }
-
-    private String removeFileExtention(String fileName) {
-        return fileName.substring(0, fileName.lastIndexOf('.'));
     }
 
     private String findGlobalIP() throws CannotGetOwnIPException {
