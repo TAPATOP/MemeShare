@@ -1,6 +1,7 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {MemeDomain} from '../classes/MemeDomain';
+import {environment} from '../../environments/environment';
 
 type RawDomainArray = Array<{name, address}>;
 
@@ -14,10 +15,7 @@ export class DomainService {
   @Output() changedDomainEmitter = new EventEmitter<MemeDomain>();
 
   constructor(private http: HttpClient) {
-    this.setSource('http://www.mocky.io/v2/5cd983e43000006621c016c6');
-    this.http.get('http://localhost:8080/meme', {responseType: 'json'}).subscribe((data) => {
-      console.log(data);
-    });
+    this.setSource(environment.domainsHost);
   }
 
   loadDomains() {
