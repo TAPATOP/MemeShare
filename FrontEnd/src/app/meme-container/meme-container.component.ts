@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { MemeStorageService } from '../services/meme-storage.service';
-import { PageCounterService } from '../services/page-counter.service';
-import { Meme } from '../classes/Meme';
-import { FilterComponent } from '../filter/filter.component';
+import {MemeStorageService} from '../services/meme-storage.service';
+import {PageCounterService} from '../services/page-counter.service';
+import {Meme} from '../classes/Meme';
+import {FilterComponent} from '../filter/filter.component';
 import {FilterService} from '../services/filter.service';
+import {ItskoResponse, Status} from '../classes/ItskoResponse';
 
 @Component({
   selector: 'app-meme-container',
@@ -33,7 +34,6 @@ export class MemeContainerComponent implements OnInit {
       this.updateMemes();
     });
     this.filterService.filterTextChangeEmitter.subscribe(() => {
-      console.log('filter changed');
       this.updateMemes();
     });
   }
@@ -52,9 +52,17 @@ export class MemeContainerComponent implements OnInit {
   }
 
   deleteMeme(meme: Meme) {
-    const message = this.memeStorageService.deleteMeme(meme.getTitle());
-    if (message) {
-      console.log(message);
+    const message: ItskoResponse = this.memeStorageService.deleteMeme(meme);
+    if (message === null) {
+      console.log('fuck');
+      return;
     }
+    if (message.getStatus() === Status.NOT_ALRIGHT) {
+      console.log(message.getMessage());
+    }
+  }
+
+  editMeme(meme: Meme) {
+
   }
 }

@@ -1,10 +1,9 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
 
 import {Meme} from '../classes/Meme';
 import {DomainService} from './domain.service';
+import {ItskoResponse, Status} from '../classes/ItskoResponse';
 
 type rawMeme = Array<{title, image}>;
 
@@ -50,13 +49,17 @@ export class MemeStorageService {
     return this.memes.length;
   }
 
-  deleteMeme(title: string) {
-    const url = `${this.domainService.getCurrentDomain().getAddress()}/delete?meme-title=${title}`;
+  deleteMeme(meme: Meme): ItskoResponse {
+    const url = `${this.domainService.getCurrentDomain().getAddress()}/delete?meme-title=${meme.getTitle()}`;
     console.log(url);
-    return this.http.delete(url)
+    this.http.delete(url)
       .subscribe(
-        () => console.log('Success'),
-        error => throwError(error)
+        () => {},
+        () => {
+          return new ItskoResponse('Deletion messed up lol', Status.NOT_ALRIGHT);
+        }
         );
+    this.memes = this.memes.filter(item => item !== meme);
+    return new ItskoResponse('Delete successful!', Status.ALRIGHT);
   }
 }

@@ -7,12 +7,12 @@ import java.io.IOException;
 public class Meme {
 
     private final String title;
-    private final String imageURL;
+    private final String image;
     private final String absolutePath;
 
-    public Meme(String title, String imageURL, String absolutePath) {
+    public Meme(String title, String image, String absolutePath) {
         this.title = title;
-        this.imageURL = imageURL;
+        this.image = image;
         this.absolutePath = absolutePath;
     }
 
@@ -20,8 +20,8 @@ public class Meme {
         return title;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImage() {
+        return image;
     }
 
     public String getAbsolutePath() {

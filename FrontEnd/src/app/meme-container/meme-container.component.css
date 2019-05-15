@@ -24,3 +24,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.buttons button {
+  margin: 1%;
+}
+
+.edit-meme {
+  background: red;
+  border: none;
+}
+
+.delete-meme {
+  background: red;
+  border: none;
+}

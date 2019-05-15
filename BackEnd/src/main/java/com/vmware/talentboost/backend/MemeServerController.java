@@ -39,8 +39,7 @@ public class MemeServerController {
     private String title;
     @Value("${domains.host.properties}")
     String domainsHost;
-    private final
-    MemeModel memeModel;
+    private final MemeModel memeModel;
 
     private int id = 0;
 
@@ -52,9 +51,6 @@ public class MemeServerController {
     @GetMapping("/meme")
     public ResponseEntity<String> sendAllMemes() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Allow-Origin", "*");
-
-        System.out.println("SPURDO SPARDE");
 
         try {
             return ResponseEntity.ok()
@@ -71,7 +67,6 @@ public class MemeServerController {
             @RequestParam(value="meme-title", defaultValue="") String memeTitle
     ) {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Allow-Origin", "*");
         if (memeTitle.equals("")) {
             System.out.println("I didnt receive a parameter");
             return ResponseEntity.status(400)
