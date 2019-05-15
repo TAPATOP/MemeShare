@@ -11,7 +11,7 @@ import { MemeDomain } from '../classes/MemeDomain';
 })
 export class DomainSelectorComponent implements OnInit {
   constructor(
-    private domainService: DomainService
+    public domainService: DomainService
   ) { }
 
   ngOnInit() {

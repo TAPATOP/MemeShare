@@ -1,5 +1,8 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+
 import {Meme} from '../classes/Meme';
 import {DomainService} from './domain.service';
 
@@ -23,7 +26,7 @@ export class MemeStorageService {
   }
 
   getAllData() {
-    const getRequest = this.sourceURL;
+    const getRequest = this.sourceURL + '/meme';
     console.log('Fetching this: ' + getRequest);
     return this.http.get(getRequest).subscribe((response: rawMeme) => {
       this.memes = [];
@@ -45,5 +48,15 @@ export class MemeStorageService {
 
   getNumberOfMemes() {
     return this.memes.length;
+  }
+
+  deleteMeme(title: string) {
+    const url = `${this.domainService.getCurrentDomain().getAddress()}/delete?meme-title=${title}`;
+    console.log(url);
+    return this.http.delete(url)
+      .subscribe(
+        () => console.log('Success'),
+        error => throwError(error)
+        );
   }
 }

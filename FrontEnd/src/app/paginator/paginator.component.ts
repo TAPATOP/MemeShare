@@ -7,7 +7,7 @@ import {PageCounterService} from '../services/page-counter.service';
   styleUrls: ['./paginator.component.css']
 })
 export class PaginatorComponent implements OnInit {
-  constructor(private pageCounterService: PageCounterService) { }
+  constructor(public pageCounterService: PageCounterService) { }
 
   ngOnInit() {
   }

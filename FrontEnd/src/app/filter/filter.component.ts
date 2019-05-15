@@ -10,7 +10,7 @@ import {Meme} from '../classes/Meme';
   styleUrls: ['./filter.component.css']
 })
 export class FilterComponent implements OnInit {
-  private filterForm: FormGroup;
+  filterForm: FormGroup;
 
   constructor(private filterService: FilterService, private formBuilder: FormBuilder) {
     this.filterForm = this.formBuilder.group({

@@ -33,9 +33,11 @@ public class MemeModel {
 
         for (File file : files) {
             if (file.isFile()) {
-                String url = file.getAbsolutePath();
+                String url = "http://localhost:8080/memes/" + file.getName();
                 String memeTitle = removeFileExtension(file.getName());
-                memes.put(memeTitle, new Meme(memeTitle, url));
+                memes.put(memeTitle, new Meme(
+                        memeTitle, url, file.getAbsolutePath()
+                ));
                 System.out.println(url);
             }
         }
@@ -58,9 +60,11 @@ public class MemeModel {
 
     public void deleteMeme(String memeName) throws MemeDoesntExistException, FileCouldntBeDeletedException {
         Meme meme = getMeme(memeName);
-        File fileForDeletion = new File(meme.getImageURL());
+        String fileRealURL = meme.getAbsolutePath();
+        System.out.println(fileRealURL);
+        File fileForDeletion = new File(fileRealURL);
         if(!fileForDeletion.delete()) {
-            throw new FileCouldntBeDeletedException("Couldn't delete the file");
+            throw new FileCouldntBeDeletedException("Couldn't delete " + fileRealURL);
         }
         memes.remove(memeName);
     }

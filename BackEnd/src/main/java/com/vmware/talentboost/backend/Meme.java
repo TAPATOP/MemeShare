@@ -8,10 +8,12 @@ public class Meme {
 
     private final String title;
     private final String imageURL;
+    private final String absolutePath;
 
-    public Meme(String title, String imageURL) {
+    public Meme(String title, String imageURL, String absolutePath) {
         this.title = title;
         this.imageURL = imageURL;
+        this.absolutePath = absolutePath;
     }
 
     public String getTitle() {
@@ -20,6 +22,10 @@ public class Meme {
 
     public String getImageURL() {
         return imageURL;
+    }
+
+    public String getAbsolutePath() {
+        return absolutePath;
     }
 
     public static String JSONify(Meme[] memes) {

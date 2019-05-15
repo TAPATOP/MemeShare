@@ -42,32 +42,19 @@ public class MemeServerController {
     private final
     MemeModel memeModel;
 
-    private int id = 2;
+    private int id = 0;
 
     @Autowired
     public MemeServerController(MemeModel memeModel) {
         this.memeModel = memeModel;
     }
 
-    @RequestMapping("/greeting")
-    public Meme greeting(@RequestParam(value="name", defaultValue="World") String name) {
-        return new Meme("some titl", "Some url");
-    }
-
-    @GetMapping("/itsko")
-    public ResponseEntity<String> something(@RequestParam(value="name", defaultValue="fucker") String name) {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Allow-Origin", "*");
-
-        return ResponseEntity.ok()
-                .headers(responseHeaders)
-                .body(new Meme("title", "itsko is the best " + name).toString());
-    }
-
     @GetMapping("/meme")
     public ResponseEntity<String> sendAllMemes() {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
+
+        System.out.println("SPURDO SPARDE");
 
         try {
             return ResponseEntity.ok()
@@ -86,6 +73,7 @@ public class MemeServerController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
         if (memeTitle.equals("")) {
+            System.out.println("I didnt receive a parameter");
             return ResponseEntity.status(400)
                     .headers(responseHeaders)
                     .body("Empty meme for deletion title");
@@ -94,64 +82,58 @@ public class MemeServerController {
         try {
             memeModel.deleteMeme(memeTitle);
         } catch (MemeDoesntExistException e) {
+            System.out.println("This meme doesnt exist");
             return ResponseEntity.status(404)
                     .headers(responseHeaders)
                     .body(e.getMessage());
         } catch (FileCouldntBeDeletedException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(409)
                     .headers(responseHeaders)
                     .body(e.getMessage());
         }
 
         String body = memeTitle + " successfully deleted!";
+        System.out.println("RIP meme");
         return ResponseEntity.ok()
                 .headers(responseHeaders)
                 .body(body);
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void fun() {
-        try {
-            System.out.println(Arrays.toString(memeModel.getMemes()) + " " + title + " " + domainsHost);
-        } catch (NoMemesFoundException e) {
-            System.out.println(e.getMessage());
+    public void register() throws CannotGetOwnIPException {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        map.add("name", "Deep Fried Memes");
+        map.add("address", "http://" + findGlobalIP() + ":8080");
+        System.out.println(map.toString());
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity( domainsHost + "/domain/register", request , String.class );
+        System.out.println(response.toString());
+        if (response.getStatusCodeValue() == 200 && response.getBody() != null) {
+            id = Integer.parseInt(response.getBody());
         }
     }
 
-//    @EventListener(ApplicationReadyEvent.class)
-    public int register() throws CannotGetOwnIPException {
+    @PreDestroy
+    public void deregister() {
         RestTemplate restTemplate = new RestTemplate();
-        String request =
-                "{" +
-                        "\"name\":\"" + title +"\"," +
-                        "\"address\":\"" + findGlobalIP() +"\"" +
-                "}";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Map<String, String> getMap = new HashMap<>();
-        getMap.put("name", title);
-        getMap.put("address", findGlobalIP());
+        String url = domainsHost + "/domain/deregister/" + id;
+        Map<String, Integer> values = new HashMap<>(2);
+        values.put("id", id);
 
-        HttpEntity<Map> entity = new HttpEntity<>(getMap, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity( domainsHost + "/domain/register", entity, String.class);
+        System.out.println(url);
 
-        System.out.println(response.toString());
-        return response.getStatusCodeValue();
-    }
-
-//    @PreDestroy
-    public int deregister() {
-        RestTemplate restTemplate = new RestTemplate();
-        String request = "{\"id\": " + id +"}";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<String> entity = new HttpEntity<>(request, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity( domainsHost + "/domain/deregister", entity, String.class);
-
-        System.out.println(response.toString());
-        return response.getStatusCodeValue();
+        restTemplate.delete(
+                url,
+                values
+        );
     }
 
     private String findGlobalIP() throws CannotGetOwnIPException {
@@ -171,5 +153,10 @@ public class MemeServerController {
             throw new CannotGetOwnIPException("Couldn't open a buffered reader");
         }
         return ip;
+    }
+
+    @RequestMapping("/shutdown")
+    void shutdown() {
+        deregister();
     }
 }

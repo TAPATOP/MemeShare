@@ -13,7 +13,7 @@ import {FilterService} from '../services/filter.service';
   providers: [FilterComponent]
 })
 export class MemeContainerComponent implements OnInit {
-  private memesForDisplay: Meme[];
+  memesForDisplay: Meme[];
 
   constructor(
     private memeStorageService: MemeStorageService,
@@ -49,5 +49,12 @@ export class MemeContainerComponent implements OnInit {
     const filteredMemes: Meme[] =
       this.filterComponent.filterMemes(this.memeStorageService.getMemes(), highMemeIDBound);
     return filteredMemes.slice(lowerMemeIDBound, highMemeIDBound);
+  }
+
+  deleteMeme(meme: Meme) {
+    const message = this.memeStorageService.deleteMeme(meme.getTitle());
+    if (message) {
+      console.log(message);
+    }
   }
 }

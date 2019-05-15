@@ -8,9 +8,9 @@ import {PageCounterService} from '../services/page-counter.service';
 })
 export class MemePerPageComponent implements OnInit {
 
-  private memesPerPageOptions: number[];
+  memesPerPageOptions: number[];
 
-  constructor(private pageCounter: PageCounterService) { }
+  constructor(public pageCounter: PageCounterService) { }
 
   ngOnInit() {
     this.memesPerPageOptions = [1, 3, 6, 9, 9001];
