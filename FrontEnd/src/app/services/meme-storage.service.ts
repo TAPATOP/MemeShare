@@ -16,6 +16,7 @@ export class MemeStorageService {
 
   @Output() loadedMemesEmitter = new EventEmitter();
   @Output() filterWordChangeEmitter = new EventEmitter();
+  @Output() memeDeletedEmitter = new EventEmitter();
 
   constructor(private http: HttpClient, private domainService: DomainService) {
     this.memes = [];
@@ -60,6 +61,7 @@ export class MemeStorageService {
         }
         );
     this.memes = this.memes.filter(item => item !== meme);
+    this.memeDeletedEmitter.emit();
     return new ItskoResponse('Delete successful!', Status.ALRIGHT);
   }
 }

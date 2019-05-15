@@ -1,0 +1,18 @@
+.input-section {
+  display: inline-block;
+  width: 25%;
+}
+
+label {
+  display: inline-block;
+}
+
+input {
+  display: inline-block;
+}
+
+.itsko-button {
+  display: inline-block;
+  margin-left: 1%;
+  font-size: 24px;
+}

@@ -1,9 +1,9 @@
-<section class="input-part">
+<section class="input-section">
   <form [formGroup]="filterForm" (ngSubmit)="onSubmit(filterForm.controls.text.value)">
     <label>
-      Text:
+      Filter:
       <input type="text" formControlName="text">
     </label>
-    <input value="Filter!" type="submit">
+    <input class="itsko-button" value="Filter!" type="submit">
   </form>
 </section>

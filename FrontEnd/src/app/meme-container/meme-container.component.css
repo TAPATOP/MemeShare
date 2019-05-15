@@ -1,3 +1,7 @@
+.meme-container-header {
+  margin: 1% 0px
+}
+
 .meme-container {
   background: #333333;
   overflow: auto;

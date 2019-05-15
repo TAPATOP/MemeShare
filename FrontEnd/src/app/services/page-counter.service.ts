@@ -19,6 +19,10 @@ export class PageCounterService {
     memeService.loadedMemesEmitter.subscribe(() => {
       this.reset();
     });
+    memeService.memeDeletedEmitter.subscribe(() => {
+      this.calculateMaxPages();
+      console.log('new max pages: ' + this.maxPages);
+    });
   }
 
   reset() {
