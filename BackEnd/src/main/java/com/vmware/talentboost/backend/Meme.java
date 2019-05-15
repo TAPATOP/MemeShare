@@ -33,7 +33,6 @@ public class Meme {
         String jsonStr = null;
 
         try {
-            // get Employee object as a json string
             jsonStr = mapperObj.writeValueAsString(memes);
         } catch (IOException e) {
             e.printStackTrace();

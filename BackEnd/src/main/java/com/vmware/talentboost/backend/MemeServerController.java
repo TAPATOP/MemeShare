@@ -21,14 +21,12 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PreDestroy;
 
@@ -93,6 +91,20 @@ public class MemeServerController {
         return ResponseEntity.ok()
                 .headers(responseHeaders)
                 .body(body);
+    }
+
+    public void createImage(
+            @RequestParam("title") String title,
+            @RequestParam("file") MultipartFile[] files
+    ) {
+        System.out.println("Entering file creation");
+        try {
+            memeModel.createMeme(files[0], title);
+        } catch (IOException e) {
+            System.out.println("Couldn't create file");
+            return;
+        }
+        System.out.println("File creation successful!");
     }
 
     @EventListener(ApplicationReadyEvent.class)

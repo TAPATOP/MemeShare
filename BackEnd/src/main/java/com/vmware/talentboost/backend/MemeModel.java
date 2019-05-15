@@ -5,11 +5,18 @@ import com.vmware.talentboost.backend.exceptions.MemeDoesntExistException;
 import com.vmware.talentboost.backend.exceptions.NoMemesFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class MemeModel {
@@ -30,7 +37,10 @@ public class MemeModel {
             System.out.println("Warning: No memes found");
             return;
         }
+        makeMemes(files);
+    }
 
+    private void makeMemes(File[] files) {
         for (File file : files) {
             if (file.isFile()) {
                 String url = "http://localhost:8080/memes/" + file.getName();
@@ -62,11 +72,30 @@ public class MemeModel {
         Meme meme = getMeme(memeName);
         String fileRealURL = meme.getAbsolutePath();
         System.out.println(fileRealURL);
-        File fileForDeletion = new File(fileRealURL);
+        File fileForDeletion = new File(fileRealURL); // TODO: test if this is replaceable
         if(!fileForDeletion.delete()) {
             throw new FileCouldntBeDeletedException("Couldn't delete " + fileRealURL);
         }
         memes.remove(memeName);
+    }
+
+    public void createMeme(MultipartFile file, String title) throws IOException {
+
+        String fileName = title + "." + getFileExtension(file);
+        String fileURL = memesSource + "/" + fileName;
+
+        Files.copy(
+                file.getInputStream(),
+                Paths.get(fileURL)
+        );
+        File newFile = new File(fileURL);
+
+        memes.put(title, new Meme(title, fileURL, newFile.getAbsolutePath()));
+
+    }
+
+    private String getFileExtension(MultipartFile file) {
+        return Objects.requireNonNull(file.getContentType());
     }
 
     private String removeFileExtension(String fileName) {

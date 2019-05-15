@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import {RouterModule} from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { MemeContainerComponent } from './meme-container/meme-container.component';
@@ -9,7 +11,9 @@ import { DomainSelectorComponent } from './domain-selector/domain-selector.compo
 import { PaginatorComponent } from './paginator/paginator.component';
 import { MemePerPageComponent } from './meme-per-page/meme-per-page.component';
 import { FilterComponent } from './filter/filter.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { MemeSubmitterComponent } from './meme-submitter/meme-submitter.component';
+import { NavComponent } from './nav/nav.component';
+import {AppRoutingModule} from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -19,12 +23,15 @@ import { ReactiveFormsModule } from '@angular/forms';
     DomainSelectorComponent,
     PaginatorComponent,
     MemePerPageComponent,
-    FilterComponent
+    FilterComponent,
+    MemeSubmitterComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
