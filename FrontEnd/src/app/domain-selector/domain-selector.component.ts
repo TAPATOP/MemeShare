@@ -20,7 +20,6 @@ export class DomainSelectorComponent implements OnInit {
 
   setDomain(domain: MemeDomain) {
     this.domainService.setCurrentDomain(domain);
-    this.domainService.changedDomainEmitter.emit(domain);
   }
 
   getCurrentDomain() {

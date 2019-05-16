@@ -19,7 +19,7 @@ export class DomainService {
   }
 
   loadDomains() {
-    this.domains.push(new MemeDomain('Localhost', 'http://localhost:8080'));
+    this.domains = [];
     this.http.get(this.sourceURL).subscribe((domainArray: RawDomainArray) => {
       for (const domain of domainArray) {
         this.domains.push(new MemeDomain(domain.name, domain.address));
@@ -34,6 +34,7 @@ export class DomainService {
 
   setCurrentDomain(domain: MemeDomain) {
     this.currentDomain = domain;
+    this.changedDomainEmitter.emit(domain);
   }
 
   getCurrentDomain() {

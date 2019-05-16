@@ -21,7 +21,9 @@ export class MemeStorageService {
   constructor(private http: HttpClient, private domainService: DomainService) {
     this.memes = [];
     this.domainService.changedDomainEmitter.subscribe((newDomain) => {
-      this.setSource(newDomain.getAddress());
+      if (newDomain) {
+        this.setSource(newDomain.getAddress());
+      }
     });
   }
 

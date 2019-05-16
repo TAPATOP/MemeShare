@@ -11,6 +11,7 @@ export class ExplorePageComponent implements OnInit {
   constructor(public domainService: DomainService) { }
 
   ngOnInit() {
+    this.domainService.setCurrentDomain(this.domainService.getDomains()[0]);
   }
 
 }
