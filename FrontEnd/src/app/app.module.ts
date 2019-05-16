@@ -14,6 +14,7 @@ import { FilterComponent } from './filter/filter.component';
 import { MemeSubmitterComponent } from './meme-submitter/meme-submitter.component';
 import { NavComponent } from './nav/nav.component';
 import {AppRoutingModule} from './app-routing.module';
+import {ExplorePageComponent} from './explore-page/explore-page.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {AppRoutingModule} from './app-routing.module';
     MemePerPageComponent,
     FilterComponent,
     MemeSubmitterComponent,
-    NavComponent
+    NavComponent,
+    ExplorePageComponent
   ],
   imports: [
     BrowserModule,
