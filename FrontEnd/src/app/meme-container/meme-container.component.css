@@ -1,5 +1,5 @@
 .meme-container-header {
-  margin: 1% 0px
+  margin: 1% 0;
 }
 
 .meme-container {
@@ -41,4 +41,9 @@
 .delete-meme {
   background: red;
   border: none;
+}
+
+.meme-container-header {
+  background: #3e8e41;
+  margin: 1px 0;
 }

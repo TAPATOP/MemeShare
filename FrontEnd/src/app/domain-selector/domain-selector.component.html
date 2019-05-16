@@ -3,14 +3,14 @@
     <button class="dropbtn">
 
     <ng-container
-      *ngIf="getCurrentDomain(); then loggedIn; else loggedOut">
+      *ngIf="getCurrentDomain(); then showDomainName; else showGreeting">
     </ng-container>
 
-    <ng-template #loggedIn>
+    <ng-template #showDomainName>
         {{ getCurrentDomain().getName() }}
     </ng-template>
 
-    <ng-template #loggedOut>
+    <ng-template #showGreeting>
         Please select meme domain
     </ng-template>
     </button>

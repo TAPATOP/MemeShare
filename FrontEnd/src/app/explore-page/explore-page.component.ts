@@ -8,7 +8,9 @@ import {DomainService} from '../services/domain.service';
 })
 export class ExplorePageComponent implements OnInit {
 
-  constructor(public domainService: DomainService) { }
+  constructor(public domainService: DomainService) {
+    this.domainService.setCurrentDomain(this.domainService.getDomains()[0]);
+  }
 
   ngOnInit() {
     this.domainService.setCurrentDomain(this.domainService.getDomains()[0]);

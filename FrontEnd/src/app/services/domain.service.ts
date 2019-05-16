@@ -44,4 +44,8 @@ export class DomainService {
   getDomains() {
     return this.domains;
   }
+
+  getHomeDomain() {
+    return environment.homeDomain;
+  }
 }

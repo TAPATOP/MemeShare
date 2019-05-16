@@ -6,6 +6,7 @@ import com.vmware.talentboost.backend.exceptions.NoMemesFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -72,7 +73,7 @@ public class MemeModel {
         Meme meme = getMeme(memeName);
         String fileRealURL = meme.getAbsolutePath();
         System.out.println(fileRealURL);
-        File fileForDeletion = new File(fileRealURL); // TODO: test if this is replaceable
+        File fileForDeletion = new File(fileRealURL); // TODO: check if this is replaceable
         if(!fileForDeletion.delete()) {
             throw new FileCouldntBeDeletedException("Couldn't delete " + fileRealURL);
         }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {PageCounterService} from '../services/page-counter.service';
 import {DomainService} from '../services/domain.service';
 import {MemeDomain} from '../classes/MemeDomain';
 import {environment} from '../../environments/environment';
@@ -11,11 +10,10 @@ import {environment} from '../../environments/environment';
 })
 export class HomePageComponent implements OnInit {
 
-  constructor(private domainService: DomainService) {
-    this.domainService.setCurrentDomain(new MemeDomain('Home', environment.homeDomain)); }
+  constructor(private domainService: DomainService) {}
 
   ngOnInit() {
-    this.domainService.setCurrentDomain(new MemeDomain('Home', environment.homeDomain));
+    this.domainService.setCurrentDomain(new MemeDomain('Home', this.domainService.getHomeDomain()));
   }
 
 }

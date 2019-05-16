@@ -93,6 +93,7 @@ public class MemeServerController {
                 .body(body);
     }
 
+    @PostMapping("/create")
     public void createImage(
             @RequestParam("title") String title,
             @RequestParam("file") MultipartFile[] files

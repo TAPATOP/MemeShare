@@ -1,3 +1,17 @@
-<p>
-  meme-submitter works!
-</p>
+<section class="input-section">
+  <form [formGroup]="memeSendForm"
+        (ngSubmit)="onSubmit(
+        memeSendForm.controls.text.value,
+        memeSendForm.controls.image.value
+        )">
+    <label>
+      Title:
+      <input type="text" formControlName="text">
+    </label>
+    <label>
+      Image:
+      <input type="file" accept="image/*" formControlName="image">
+    </label>
+    <input class="itsko-button" value="Filter!" type="submit">
+  </form>
+</section>
