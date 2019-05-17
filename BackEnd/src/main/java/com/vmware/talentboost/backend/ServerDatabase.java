@@ -23,6 +23,30 @@ public class ServerDatabase {
 //        }
 //    }
 
+    public void insertMeme(Meme meme) {
+        String sql = "INSERT INTO records (title, public_url, absolute_path) values (?, ?, ?)";
+        jdbcTemplate.update(sql, meme.getTitle(), meme.getImage(), meme.getAbsolutePath());
+        jdbcTemplate.queryForList(
+                "select title from records",
+                String.class
+        );
+    }
+
+    public List<Meme> getAllMemes() {
+        String query = "select * from records";
+        return jdbcTemplate.query(
+                query,
+                new MemeMapper()
+        );
+    }
+
+    public Meme getMeme(int id) {
+        return jdbcTemplate.queryForObject(
+                "select * from records where id like ?",
+                new MemeMapper(),
+                id);
+    }
+
     public String getCapitalOf(String country) {
         return jdbcTemplate.queryForObject(
                 "select capital from capitals where country like ?",

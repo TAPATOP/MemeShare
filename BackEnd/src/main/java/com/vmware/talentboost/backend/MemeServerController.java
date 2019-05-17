@@ -36,8 +36,6 @@ public class MemeServerController {
     @Value("${domains.host.properties}")
     String domainsHost;
     private final MemeModel memeModel;
-    @Autowired
-    private ServerDatabase database;
 
     private int id = 0;
 

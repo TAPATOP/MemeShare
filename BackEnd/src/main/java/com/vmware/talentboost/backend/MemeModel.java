@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,11 +22,16 @@ import java.util.Objects;
 public class MemeModel {
     private Map<String, Meme> memes;
     private String memesSource;
+    private ServerDatabase database;
 
     @Autowired
-    MemeModel(@Value("${my.memes.location}") String memeLocation) {
+    MemeModel(
+            @Value("${my.memes.location}") String memeLocation,
+            ServerDatabase database
+    ) {
         memes = new HashMap<>();
         memesSource = memeLocation;
+        this.database = database;
         loadMemes();
     }
 
@@ -44,9 +50,11 @@ public class MemeModel {
             if (file.isFile()) {
                 String url = generateMemePublicURL(file.getName());
                 String memeTitle = removeFileExtension(file.getName());
-                memes.put(memeTitle, new Meme(
-                        memeTitle, url, file.getAbsolutePath()
-                ));
+                Meme meme = new Meme(memeTitle, url, file.getAbsolutePath());
+                memes.put(memeTitle, meme);
+                /** enable this in case you're starting this for the first time and
+                * already have images in your memes folder */
+//                database.insertMeme(meme);
             }
         }
     }
@@ -56,10 +64,11 @@ public class MemeModel {
     }
 
     public Meme[] getMemes() throws NoMemesFoundException {
+        List<Meme> memes = database.getAllMemes();
         if(memes.isEmpty()) {
             throw new NoMemesFoundException("No memes, mate");
         }
-        return memes.values().toArray(new Meme[0]);
+        return memes.toArray(new Meme[0]);
     }
 
     public Meme getMeme(String memeName) throws MemeDoesntExistException {
