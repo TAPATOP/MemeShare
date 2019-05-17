@@ -6,9 +6,9 @@ import java.io.IOException;
 
 public class Meme {
 
-    private final String title;
-    private final String image;
-    private final String absolutePath;
+    private String title;
+    private String image;
+    private String absolutePath;
 
     public Meme(String title, String image, String absolutePath) {
         this.title = title;
@@ -26,6 +26,11 @@ public class Meme {
 
     public String getAbsolutePath() {
         return absolutePath;
+    }
+
+    public void rename(String publicPath, String absolutePath) {
+        this.image = publicPath;
+        this.absolutePath = absolutePath;
     }
 
     public static String JSONify(Meme[] memes) {

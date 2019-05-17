@@ -42,7 +42,7 @@ export class MemeEditorComponent implements OnInit, MemeSubmitter {
     this.memeSubmitService.setTitle(newTitle);
     this.memeSubmitService.edit().subscribe(
       () => console.log('Success!'),
-      () => console.log('Big oof'),
+      (error) => console.log(error),
       () => this.router.navigate([''])
     );
   }

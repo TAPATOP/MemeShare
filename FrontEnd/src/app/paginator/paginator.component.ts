@@ -10,6 +10,7 @@ export class PaginatorComponent implements OnInit {
   constructor(public pageCounterService: PageCounterService) { }
 
   ngOnInit() {
+    this.pageCounterService.incrementPage();
   }
 
 }

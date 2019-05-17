@@ -1,4 +1,14 @@
 <div class="paginator-container" *ngIf="pageCounterService.getMaxPages() > 1">
-  <button class="itsko-button" (click)="pageCounterService.decrementPage()"> Prev </button>
-  <button class="itsko-button" (click)="pageCounterService.incrementPage()"> Next </button>
+  <button
+    class="itsko-button"
+    *ngIf="pageCounterService.getCurrentPage() > 1"
+    (click)="pageCounterService.decrementPage()">
+    Prev
+  </button>
+  <button
+    class="itsko-button"
+    (click)="pageCounterService.incrementPage()"
+    *ngIf="pageCounterService.getCurrentPage() < pageCounterService.getMaxPages()">
+    Next
+  </button>
 </div>

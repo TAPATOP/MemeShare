@@ -41,7 +41,7 @@ export class MemeCreatorComponent implements OnInit, MemeSubmitter {
     this.memeSubmitService.prepareImage(file, memeFileName);
     this.memeSubmitService.create().subscribe(
       () => console.log('Success!'),
-      () => console.log('Big oof'),
+      (error) => console.log(error),
       () => this.router.navigate([''])
     );
   }

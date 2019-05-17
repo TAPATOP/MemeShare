@@ -6,15 +6,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.vmware.talentboost.backend.exceptions.CannotGetOwnIPException;
-import com.vmware.talentboost.backend.exceptions.FileCouldntBeDeletedException;
-import com.vmware.talentboost.backend.exceptions.MemeDoesntExistException;
-import com.vmware.talentboost.backend.exceptions.NoMemesFoundException;
+import com.vmware.talentboost.backend.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -64,63 +62,69 @@ public class MemeServerController {
     public ResponseEntity<String> deleteMeme(
             @RequestParam(value="meme-title", defaultValue="") String memeTitle
     ) {
-        HttpHeaders responseHeaders = new HttpHeaders();
         if (memeTitle.equals("")) {
-            System.out.println("I didnt receive a parameter");
-            return ResponseEntity.status(400)
-                    .headers(responseHeaders)
-                    .body("Empty meme for deletion title");
+            System.out.println("Empty meme for deletion title");
+            return ResponseEntity.status(400).body("Empty meme for deletion title");
         }
 
         try {
             memeModel.deleteMeme(memeTitle);
         } catch (MemeDoesntExistException e) {
             System.out.println("This meme doesnt exist");
-            return ResponseEntity.status(404)
-                    .headers(responseHeaders)
-                    .body(e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
         } catch (FileCouldntBeDeletedException e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.status(409)
-                    .headers(responseHeaders)
-                    .body(e.getMessage());
+            return ResponseEntity.status(409).body(e.getMessage());
         }
 
         String body = memeTitle + " successfully deleted!";
         System.out.println("RIP meme");
-        return ResponseEntity.ok()
-                .headers(responseHeaders)
-                .body(body);
+        return ResponseEntity.ok().body(body);
     }
 
     @PostMapping("/create")
-    public void createImage(
+    public ResponseEntity<String> createImage(
             @RequestParam("title") String title,
             @RequestParam(value = "file", required = true) MultipartFile files
     ) {
-        System.out.println(title);
-        if(files == null) {
-            System.out.println("NULL FILES");
-        }
         try {
             memeModel.createMeme(files, title);
-        } catch (IOException e) {
-            System.out.println("Couldn't create file");
-            return;
+        } catch (FileAlreadyExistsException exists) {
+            return ResponseEntity.status(501)
+                    .body("File name taken. The fix of this is to be implemented via a database");
+        }  catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Couldnt create file");
         }
-        System.out.println("File creation successful!");
+        return ResponseEntity.ok().body("File creation successful!");
     }
 
     @PutMapping("/edit")
-    public void updateMeme(
+    public ResponseEntity<String> updateMeme(
             @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam(value = "id", required = false) String identifier,
-            @RequestParam(value = "title", required = false) String title
+            @RequestParam(value = "id", required = false) String id,
+            @RequestParam(value = "title", required = false) String newTitle
     ) {
-        System.out.println("Someone wants to PUT something. They sent this:");
-        System.out.println(file);
-        System.out.println(identifier);
-        System.out.println(title);
+        if (file == null) {
+            try {
+                renameMeme(id, newTitle);
+            } catch (CannotRenameMemeException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body("Cannot rename right now");
+            }
+        } else {
+            replaceMeme();
+        }
+        return ResponseEntity.ok().body("Successful edit");
+    }
+
+    private void renameMeme(String id, String newTitle) throws CannotRenameMemeException {
+        memeModel.renameFile(id, newTitle);
+        System.out.println("File should be renamed now");
+    }
+
+    private void replaceMeme() {
+        System.out.println("Here comes the www");
     }
 
     @EventListener(ApplicationReadyEvent.class)

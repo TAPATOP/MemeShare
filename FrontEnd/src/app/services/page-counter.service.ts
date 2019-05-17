@@ -7,7 +7,7 @@ import {MemeStorageService} from './meme-storage.service';
 export class PageCounterService {
   private currentPage = 1;
   private memesPerPage = 3;
-  private maxPages = 0;
+  private maxPages = 1;
 
   @Output() changedPageEmitter = new EventEmitter();
   @Output() memePerPageChangeEmitter = new EventEmitter();

@@ -1,5 +1,6 @@
 package com.vmware.talentboost.backend;
 
+import com.vmware.talentboost.backend.exceptions.CannotRenameMemeException;
 import com.vmware.talentboost.backend.exceptions.FileCouldntBeDeletedException;
 import com.vmware.talentboost.backend.exceptions.MemeDoesntExistException;
 import com.vmware.talentboost.backend.exceptions.NoMemesFoundException;
@@ -81,16 +82,33 @@ public class MemeModel {
     }
 
     public void createMeme(MultipartFile file, String title) throws IOException {
-        File newFile = new File(memesSource + '\\' + title);
-        String fileURL = newFile.getAbsolutePath();
-        System.out.println("Creating here: " + fileURL);
+        String filePublicPath = memesSource + '\\' + title;
+        File newFile = new File(filePublicPath);
+        String fileAbsolutePath = newFile.getAbsolutePath();
+        System.out.println("Creating here: " + fileAbsolutePath);
         Files.copy(
                 file.getInputStream(),
-                Paths.get(fileURL)
+                Paths.get(fileAbsolutePath)
         );
+        memes.put(title, new Meme(title, filePublicPath, fileAbsolutePath));
     }
 
     private String removeFileExtension(String fileName) {
         return fileName.substring(0, fileName.lastIndexOf('.'));
+    }
+
+    public void renameFile(String identifier, String newName) throws CannotRenameMemeException {
+        Meme memeForRenaming = memes.get(identifier);
+        File fileForRenaming = new File(memeForRenaming.getAbsolutePath());
+        String newFileNamePath = fileForRenaming.getParent() + '\\' + newName + getFileExtension(fileForRenaming.getName());
+        if (!fileForRenaming.renameTo(new File(newFileNamePath))) {
+            throw new CannotRenameMemeException("Cannot rename this file");
+        }
+        String filePublicPath = memesSource + '\\' + newName;
+        memeForRenaming.rename(filePublicPath, newFileNamePath);
+    }
+
+    private String getFileExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf('.'), fileName.length());
     }
 }
