@@ -70,15 +70,15 @@ public class MemeModel {
         return meme;
     }
 
-    public void deleteMeme(String memeName) throws MemeDoesntExistException, FileCouldntBeDeletedException {
-        Meme meme = getMeme(memeName);
+    public void deleteMeme(String id) throws MemeDoesntExistException, FileCouldntBeDeletedException {
+        Meme meme = getMeme(id);
         String fileRealURL = meme.getAbsolutePath();
         System.out.println(fileRealURL);
         File fileForDeletion = new File(fileRealURL); // TODO: check if this is replaceable
         if(!fileForDeletion.delete()) {
             throw new FileCouldntBeDeletedException("Couldn't delete " + fileRealURL);
         }
-        memes.remove(memeName);
+        memes.remove(id);
     }
 
     public void createMeme(MultipartFile file, String title) throws IOException {

@@ -46,21 +46,18 @@ public class MemeServerController {
 
     @GetMapping("/meme")
     public ResponseEntity<String> sendAllMemes() {
-        HttpHeaders responseHeaders = new HttpHeaders();
-
         try {
             return ResponseEntity.ok()
-                    .headers(responseHeaders)
                     .body(Meme.JSONify(memeModel.getMemes()));
         } catch (NoMemesFoundException e) {
             e.printStackTrace();
+            return ResponseEntity.status(404).body("{}");
         }
-        return ResponseEntity.status(404).headers(responseHeaders).body("{}");
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteMeme(
-            @RequestParam(value="meme-title", defaultValue="") String memeTitle
+            @RequestParam(value="meme-title") String memeTitle
     ) {
         if (memeTitle.equals("")) {
             System.out.println("Empty meme for deletion title");
@@ -70,10 +67,9 @@ public class MemeServerController {
         try {
             memeModel.deleteMeme(memeTitle);
         } catch (MemeDoesntExistException e) {
-            System.out.println("This meme doesnt exist");
             return ResponseEntity.status(404).body(e.getMessage());
         } catch (FileCouldntBeDeletedException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(409).body(e.getMessage());
         }
 
@@ -85,7 +81,7 @@ public class MemeServerController {
     @PostMapping("/create")
     public ResponseEntity<String> createImage(
             @RequestParam("title") String title,
-            @RequestParam(value = "file", required = true) MultipartFile files
+            @RequestParam("file") MultipartFile files
     ) {
         try {
             memeModel.createMeme(files, title);
@@ -113,7 +109,17 @@ public class MemeServerController {
                 return ResponseEntity.status(500).body("Cannot rename right now");
             }
         } else {
-            replaceMeme();
+            try {
+                replaceMeme(file, id, newTitle);
+            } catch (FileAlreadyExistsException exists) {
+                return ResponseEntity.status(501)
+                        .body("New file name taken. The fix of this is to be implemented via a database");
+            } catch (IOException | FileCouldntBeDeletedException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body("Cannot edit right now");
+            } catch (MemeDoesntExistException e) {
+                return ResponseEntity.status(500).body("I can't find this meme");
+            }
         }
         return ResponseEntity.ok().body("Successful edit");
     }
@@ -123,8 +129,17 @@ public class MemeServerController {
         System.out.println("File should be renamed now");
     }
 
-    private void replaceMeme() {
-        System.out.println("Here comes the www");
+    private void replaceMeme(MultipartFile file, String id, String newTitle) throws IOException, MemeDoesntExistException, FileCouldntBeDeletedException {
+        memeModel.createMeme(file, newTitle);
+        System.out.println("Created meme");
+        try {
+            memeModel.deleteMeme(id);
+        } catch (MemeDoesntExistException | FileCouldntBeDeletedException e) {
+            System.out.println("oof, backpedalling");
+            memeModel.deleteMeme(newTitle); // hopefully this reverses the changes, similar to a transaction
+            throw e;
+        }
+        System.out.println("Alles klaar");
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -187,5 +202,3 @@ public class MemeServerController {
         deregister();
     }
 }
-
-// TODO: Add responses to methods...
