@@ -1,0 +1,40 @@
+.input-section {
+  display: block;
+  position: absolute;
+  width: 98%;
+  background: #333333;
+}
+
+h1 {
+  color: #EEEEEE;
+  text-align: center;
+  font-size: 50px;
+}
+
+form {
+  background: #CCCCCC;
+  margin: 1px 25% 5%;
+}
+
+.input-fields {
+  margin: 2%;
+  padding: 2%;
+}
+
+label {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 2px;
+  background: #EEE;
+  padding: 1%;
+  width: 95%;
+}
+
+label input {
+  display: block;
+}
+
+.itsko-button {
+  font-size: 24px;
+}

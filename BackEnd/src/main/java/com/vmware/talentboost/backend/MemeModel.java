@@ -89,7 +89,7 @@ public class MemeModel {
                 Paths.get(fileURL)
         );
     }
-    
+
     private String removeFileExtension(String fileName) {
         return fileName.substring(0, fileName.lastIndexOf('.'));
     }
