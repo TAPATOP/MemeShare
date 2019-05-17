@@ -7,10 +7,12 @@ import {isRegExp} from 'util';
   providedIn: 'root'
 })
 export class MemeSubmitterService {
-  private endpoint = '/create';
-  private method: string;
+  private creationEndpoint = '/create';
+  private editEndpoint = '/edit';
+
   private file: File;
   private title: string;
+  private id: string;
 
   constructor(
     private domainService: DomainService,
@@ -26,27 +28,43 @@ export class MemeSubmitterService {
     const formData = new FormData();
     formData.append('title', this.title);
     formData.append('file', this.file);
+    formData.append('id', this.id);
     return formData;
   }
 
-  public upload() {
-    if (!this.isReady()) {
+  public create() {
+    if (!this.title || !this.file) {
       console.log('Meme not ready for submission');
       return this.http.request(null);
     }
     const formData = this.constructFormData();
 
-    const req = new HttpRequest(this.method, this.endpoint, formData, {
+    const req = new HttpRequest('POST', this.creationEndpoint, formData, {
       // reportProgress: true,
       responseType: 'text'
     });
-    console.log('Sending' + this.file.name + ' with the title of ' + this.title + ' via this method: ' + this.method);
+    console.log(this.id);
+    console.log(this.title);
+    console.log(this.file);
     this.reset();
     return this.http.request(req);
   }
 
-  isReady(): boolean {
-    return !(!this.title || !this.method || !this.file);
+  public edit() {
+    if (!this.title || !this.id) {
+      console.log('I don\'t know which meme is for updating');
+      return this.http.request(null);
+    }
+    const formData = this.constructFormData();
+
+    const req = new HttpRequest('PUT', this.editEndpoint, formData, {
+      responseType: 'text'
+    });
+    console.log(this.id);
+    console.log(this.title);
+    console.log(this.file);
+    this.reset();
+    return this.http.request(req);
   }
 
   reset() {
@@ -55,7 +73,8 @@ export class MemeSubmitterService {
   }
 
   // in the ideal case these setters would implement some exceptions
-  // but the idea of the ideal is a government manipulation and a lie
+  // but the concept of the ideal is a government manipulation and a lie
+  // t. watched 2 minutes of Zeitgeist
   public setFile(file: File) {
     this.file = file;
   }
@@ -64,8 +83,8 @@ export class MemeSubmitterService {
     this.title = title;
   }
 
-  public setMethod(method: string) {
-    this.method = method;
+  public setID(id: string) {
+    this.id = id;
   }
 
   public getTitle() {

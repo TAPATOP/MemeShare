@@ -15,7 +15,7 @@ import { MemeCreatorComponent } from './meme-submitters/meme-creator/meme-creato
 import { NavComponent } from './nav/nav.component';
 import {AppRoutingModule} from './app-routing.module';
 import {ExplorePageComponent} from './explore-page/explore-page.component';
-import {MemeEditorComponent} from './meme-submitters/meme-updater/meme-editor.component';
+import {MemeEditorComponent} from './meme-submitters/meme-editor/meme-editor.component';
 
 @NgModule({
   declarations: [
