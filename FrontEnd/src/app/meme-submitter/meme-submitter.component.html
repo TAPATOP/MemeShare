@@ -1,17 +1,27 @@
 <section class="input-section">
   <form [formGroup]="memeSendForm"
         (ngSubmit)="onSubmit(
-        memeSendForm.controls.text.value,
-        memeSendForm.controls.image.value
+        imageInput.files,
+        memeSendForm.controls.title.value
         )">
     <label>
       Title:
-      <input type="text" formControlName="text">
+      <input type="text" formControlName="title">
     </label>
     <label>
       Image:
-      <input type="file" accept="image/*" formControlName="image">
+      <input #imageInput type="file" accept="image/*" formControlName="image">
     </label>
     <input class="itsko-button" value="Filter!" type="submit">
   </form>
 </section>
+
+<!--<form (keyup.enter)="onSubmit(file, title);">-->
+<!--  <div id="input-container">-->
+<!--    <label>Text</label>-->
+<!--    <input #title type="text" class="form-control">-->
+<!--    <label>Image</label>-->
+<!--    <input #file type="file" class="form-control-file">-->
+<!--  </div>-->
+<!--  <button type="button" class="itsko-button" (click)="onSubmit(file.files[0], title.value);">Submit!</button>-->
+<!--</form>-->

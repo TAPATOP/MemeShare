@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DomainService} from '../services/domain.service';
 import {MemeDomain} from '../classes/MemeDomain';
-import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-home-page',

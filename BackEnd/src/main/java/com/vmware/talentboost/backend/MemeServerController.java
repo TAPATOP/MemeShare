@@ -96,11 +96,14 @@ public class MemeServerController {
     @PostMapping("/create")
     public void createImage(
             @RequestParam("title") String title,
-            @RequestParam("file") MultipartFile[] files
+            @RequestParam(value = "file", required = true) MultipartFile files
     ) {
-        System.out.println("Entering file creation");
+        System.out.println(title);
+        if(files == null) {
+            System.out.println("NULL FILES");
+        }
         try {
-            memeModel.createMeme(files[0], title);
+            memeModel.createMeme(files, title);
         } catch (IOException e) {
             System.out.println("Couldn't create file");
             return;
