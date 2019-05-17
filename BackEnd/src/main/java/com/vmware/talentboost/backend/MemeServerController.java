@@ -36,6 +36,8 @@ public class MemeServerController {
     @Value("${domains.host.properties}")
     String domainsHost;
     private final MemeModel memeModel;
+    @Autowired
+    private ServerDatabase database;
 
     private int id = 0;
 
@@ -43,6 +45,7 @@ public class MemeServerController {
     public MemeServerController(MemeModel memeModel) {
         this.memeModel = memeModel;
     }
+
 
     @GetMapping("/meme")
     public ResponseEntity<String> sendAllMemes() {
@@ -126,7 +129,6 @@ public class MemeServerController {
 
     private void renameMeme(String id, String newTitle) throws CannotRenameMemeException {
         memeModel.renameFile(id, newTitle);
-        System.out.println("File should be renamed now");
     }
 
     private void replaceMeme(MultipartFile file, String id, String newTitle) throws IOException, MemeDoesntExistException, FileCouldntBeDeletedException {
