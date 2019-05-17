@@ -17,20 +17,6 @@ export class MemeSubmitterService {
     private http: HttpClient
   ) {}
 
-  // in the ideal case these setters would implement some exceptions
-  // but the idea of the ideal is a government manipulation and a lie
-  public setFile(file: File) {
-    this.file = file;
-  }
-
-  public setTitle(title: string) {
-    this.title = title;
-  }
-
-  public setMethod(method: string) {
-    this.method = method;
-  }
-
   public prepareImage(file: File, title: string) {
     this.setFile(file);
     this.setTitle(title);
@@ -66,5 +52,23 @@ export class MemeSubmitterService {
   reset() {
     this.file = null;
     this.title = null;
+  }
+
+  // in the ideal case these setters would implement some exceptions
+  // but the idea of the ideal is a government manipulation and a lie
+  public setFile(file: File) {
+    this.file = file;
+  }
+
+  public setTitle(title: string) {
+    this.title = title;
+  }
+
+  public setMethod(method: string) {
+    this.method = method;
+  }
+
+  public getTitle() {
+    return this.title;
   }
 }

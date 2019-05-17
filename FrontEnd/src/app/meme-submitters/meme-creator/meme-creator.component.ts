@@ -1,18 +1,15 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MemeSubmitterService} from '../services/meme-submitter.service';
-
-class ImageSnippet {
-  constructor(public src: string, public file: File) {}
-}
+import {MemeSubmitterService} from '../../services/meme-submitter.service';
+import {MemeSubmitter} from '../meme-submitter.interface';
 
 @Component({
   selector: 'app-meme-submitter',
-  templateUrl: './meme-submitter.component.html',
-  styleUrls: ['./meme-submitter.component.css'],
+  templateUrl: './meme-creator.component.html',
+  styleUrls: ['../meme-submitter.css', './meme-creator.component.css'],
   providers: []
 })
-export class MemeSubmitterComponent implements OnInit {
+export class MemeCreatorComponent implements OnInit, MemeSubmitter {
   memeSendForm: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
@@ -21,7 +18,8 @@ export class MemeSubmitterComponent implements OnInit {
     this.memeSendForm = this.formBuilder.group({
       title: ['', Validators.required],
       image: [null, Validators.required]
-    }); }
+    });
+  }
 
   ngOnInit() {
   }

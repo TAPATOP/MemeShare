@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MemeSubmitterComponent } from './meme-submitter.component';
+import { MemeEditorComponent } from './meme-editor.component';
 
-describe('MemeSubmitterComponent', () => {
-  let component: MemeSubmitterComponent;
-  let fixture: ComponentFixture<MemeSubmitterComponent>;
+describe('MemeEditorComponent', () => {
+  let component: MemeEditorComponent;
+  let fixture: ComponentFixture<MemeEditorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MemeSubmitterComponent ]
+      declarations: [ MemeEditorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MemeSubmitterComponent);
+    fixture = TestBed.createComponent(MemeEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

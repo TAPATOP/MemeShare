@@ -11,10 +11,11 @@ import { DomainSelectorComponent } from './domain-selector/domain-selector.compo
 import { PaginatorComponent } from './paginator/paginator.component';
 import { MemePerPageComponent } from './meme-per-page/meme-per-page.component';
 import { FilterComponent } from './filter/filter.component';
-import { MemeSubmitterComponent } from './meme-submitter/meme-submitter.component';
+import { MemeCreatorComponent } from './meme-submitters/meme-creator/meme-creator.component';
 import { NavComponent } from './nav/nav.component';
 import {AppRoutingModule} from './app-routing.module';
 import {ExplorePageComponent} from './explore-page/explore-page.component';
+import {MemeEditorComponent} from './meme-submitters/meme-updater/meme-editor.component';
 
 @NgModule({
   declarations: [
@@ -25,9 +26,10 @@ import {ExplorePageComponent} from './explore-page/explore-page.component';
     PaginatorComponent,
     MemePerPageComponent,
     FilterComponent,
-    MemeSubmitterComponent,
+    MemeCreatorComponent,
     NavComponent,
-    ExplorePageComponent
+    ExplorePageComponent,
+    MemeEditorComponent
   ],
   imports: [
     BrowserModule,

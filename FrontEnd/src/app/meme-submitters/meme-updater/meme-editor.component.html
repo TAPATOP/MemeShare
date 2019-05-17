@@ -1,0 +1,20 @@
+<section class="input-section">
+  <h1>Add a Meme</h1>
+  <form [formGroup]="memeSendForm"
+        (ngSubmit)="onSubmit(
+        imageInput.files,
+        memeSendForm.controls.title.value
+        )">
+    <div class="input-fields">
+      <label>
+        Title
+        <input type="text" formControlName="title">
+      </label>
+      <label>
+        Image
+        <input #imageInput type="file" accept="image/*" formControlName="image">
+      </label>
+    </div>
+    <input class="itsko-button" value="Upload!" type="submit">
+  </form>
+</section>

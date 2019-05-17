@@ -8,7 +8,7 @@
     <div class="meme-title"> {{ meme.getTitle() }} </div>
     <img src="{{ meme.getImageURL() }}" alt="I hope you can't see this">
     <div class="buttons" *ngIf="canManipulateSource()">
-      <button routerLink="/create" class="edit-meme" (click)="submitterService.setMethod('PUT')">EDIT</button>
+      <button routerLink="/edit" class="edit-meme" (click)="submitterService.setMethod('PUT')">EDIT</button>
       <button class="delete-meme" (click)="deleteMeme(meme)">DELETE</button>
     </div>
   </div>
