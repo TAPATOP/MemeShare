@@ -111,10 +111,10 @@ public class MemeServerController {
         System.out.println("File creation successful!");
     }
 
-    @PutMapping("/create")
+    @PutMapping("/edit")
     public void updateMeme(
             @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam(value = "identifier", required = false) String identifier,
+            @RequestParam(value = "id", required = false) String identifier,
             @RequestParam(value = "title", required = false) String title
     ) {
         System.out.println("Someone wants to PUT something. They sent this:");
