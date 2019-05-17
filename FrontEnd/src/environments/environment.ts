@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   domainsHost: 'http://www.mocky.io/v2/5cdd6620300000de7be237cc',
-  homeDomain: 'http://www.mocky.io/v2/5cd138463300006408b12772'
+  homeDomain: 'http://www.mocky.io/v2/5ccffa323200009b4400f95d'
 };
 
 /*

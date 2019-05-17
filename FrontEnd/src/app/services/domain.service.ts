@@ -48,4 +48,8 @@ export class DomainService {
   getHomeDomain() {
     return environment.homeDomain;
   }
+
+  isAtHomeDomain() {
+    return this.getHomeDomain() === this.currentDomain.getAddress();
+  }
 }

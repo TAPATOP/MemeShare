@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MemeSubmitterService} from '../services/meme-submitter.service';
 
 @Component({
   selector: 'app-nav',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavComponent implements OnInit {
   navBarTitle: string;
-  constructor() { }
+  constructor(public memeSubmitter: MemeSubmitterService) { }
 
   ngOnInit() {
     this.navBarTitle = 'Quoter';

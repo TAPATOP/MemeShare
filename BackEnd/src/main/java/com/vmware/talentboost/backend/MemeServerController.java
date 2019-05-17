@@ -111,6 +111,18 @@ public class MemeServerController {
         System.out.println("File creation successful!");
     }
 
+    @PutMapping("/create")
+    public void updateMeme(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "identifier", required = false) String identifier,
+            @RequestParam(value = "title", required = false) String title
+    ) {
+        System.out.println("Someone wants to PUT something. They sent this:");
+        System.out.println(file);
+        System.out.println(identifier);
+        System.out.println(title);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void register() throws CannotGetOwnIPException {
         RestTemplate restTemplate = new RestTemplate();
@@ -171,3 +183,5 @@ public class MemeServerController {
         deregister();
     }
 }
+
+// TODO: Add responses to methods...

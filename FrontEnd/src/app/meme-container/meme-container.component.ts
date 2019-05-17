@@ -6,6 +6,7 @@ import {Meme} from '../classes/Meme';
 import {FilterComponent} from '../filter/filter.component';
 import {FilterService} from '../services/filter.service';
 import {ItskoResponse, Status} from '../classes/ItskoResponse';
+import {MemeSubmitterService} from '../services/meme-submitter.service';
 
 @Component({
   selector: 'app-meme-container',
@@ -20,7 +21,8 @@ export class MemeContainerComponent implements OnInit {
     private memeStorageService: MemeStorageService,
     private pageCounterService: PageCounterService,
     private filterComponent: FilterComponent,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private submitterService: MemeSubmitterService
   ) { }
 
   ngOnInit() {
@@ -62,7 +64,11 @@ export class MemeContainerComponent implements OnInit {
     }
   }
 
-  editMeme(meme: Meme) {
+  canManipulateSource() {
+    return this.memeStorageService.isAtHomeDomain();
+  }
 
+  editMeme(meme: Meme) {
+    // this.submitterService
   }
 }

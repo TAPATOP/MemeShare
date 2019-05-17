@@ -27,7 +27,7 @@ export class MemeStorageService {
     });
   }
 
-  getAllData() {
+  getAllMemes() {
     const getRequest = this.sourceURL + '/meme';
     console.log('Fetching this: ' + getRequest);
     return this.http.get(getRequest).subscribe((response: rawMeme) => {
@@ -45,7 +45,7 @@ export class MemeStorageService {
 
   setSource(newURL: string) {
     this.sourceURL = newURL;
-    this.getAllData();
+    this.getAllMemes();
   }
 
   getNumberOfMemes() {
@@ -65,5 +65,9 @@ export class MemeStorageService {
     this.memes = this.memes.filter(item => item !== meme);
     this.memeDeletedEmitter.emit();
     return new ItskoResponse('Delete successful!', Status.ALRIGHT);
+  }
+
+  isAtHomeDomain() {
+    return this.domainService.isAtHomeDomain();
   }
 }
