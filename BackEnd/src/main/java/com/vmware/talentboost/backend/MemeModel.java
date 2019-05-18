@@ -89,17 +89,16 @@ public class MemeModel {
         database.removeMeme(id);
     }
 
-    public void createMeme(MultipartFile file, String title) throws IOException {
-        File newFile = createFile(file, title);
+    public void createMeme(MultipartFile file, String title, String extension) throws IOException {
+        File newFile = createFile(file, extension);
         String fileAbsolutePath = newFile.getAbsolutePath();
         System.out.println("Creating here: " + fileAbsolutePath);
         String publicPathName = generateMemePublicURL(newFile.getName());
         database.insertMeme(title, publicPathName, fileAbsolutePath);
     }
 
-    // TODO: Extension instead of title
-    public File createFile(MultipartFile file, String title) throws IOException {
-        String randomName = createRandomFileName(title);
+    public File createFile(MultipartFile file, String extention) throws IOException {
+        String randomName = createRandomFileName(extention);
         System.out.println("Trying to create a file here: " + randomName);
 
         File newFile = new File(memesSource + '\\' + randomName);
@@ -118,15 +117,10 @@ public class MemeModel {
     }
 
     private String createRandomFileName(String title) {
-//        SimpleDateFormat date = new SimpleDateFormat("File-ddMMyy-hhmmss.SSS.txt");
-//        Random random = new Random();
-//        String randomName = String.format("%s.%s", date.format( new Date() ),
-//                random.nextInt(9));
-//        return memesSource + '\\' + randomName + getFileExtension(title);
         String filename = "";
         long millis = System.currentTimeMillis();
         filename = Long.toString(millis);
-        return filename + getFileExtension(title);
+        return filename + title;
     }
 
     private String removeFileExtension(String fileName) {

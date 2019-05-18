@@ -1,7 +1,6 @@
 import {HttpClient, HttpRequest} from '@angular/common/http';
 import {DomainService} from './domain.service';
 import {Injectable} from '@angular/core';
-import {isRegExp} from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +12,7 @@ export class MemeSubmitterService {
   private file: File;
   private title: string;
   private id: string;
+  private extension: string;
 
   constructor(
     private domainService: DomainService,
@@ -29,6 +29,8 @@ export class MemeSubmitterService {
     formData.append('title', this.title);
     formData.append('file', this.file);
     formData.append('id', this.id);
+    formData.append('extension', this.extension);
+
     return formData;
   }
 
@@ -46,6 +48,7 @@ export class MemeSubmitterService {
     console.log(this.id);
     console.log(this.title);
     console.log(this.file);
+    console.log(this.extension);
     this.reset();
     return this.http.request(req);
   }
@@ -63,13 +66,14 @@ export class MemeSubmitterService {
     console.log(this.id);
     console.log(this.title);
     console.log(this.file);
+    console.log(this.extension);
     this.reset();
     return this.http.request(req);
   }
 
   reset() {
-    this.file = null;
-    this.title = null;
+    this.setFile(null);
+    this.setTitle(null);
   }
 
   // in the ideal case these setters would implement some exceptions
@@ -77,6 +81,9 @@ export class MemeSubmitterService {
   // t. watched 2 minutes of Zeitgeist
   public setFile(file: File) {
     this.file = file;
+    if (file !== null) {
+      this.extension = file.name.split('.').pop();
+    }
   }
 
   public setTitle(title: string) {

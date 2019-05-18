@@ -74,10 +74,11 @@ public class MemeServerController {
     @PostMapping("/create")
     public ResponseEntity<String> createImage(
             @RequestParam("title") String title,
+            @RequestParam("extension") String extension,
             @RequestParam("file") MultipartFile files
     ) {
         try {
-            memeModel.createMeme(files, title);
+            memeModel.createMeme(files, title, extension);
         } catch (FileAlreadyExistsException exists) {
             return ResponseEntity.status(501)
                     .body("File name taken. The fix of this is to be implemented via a database");

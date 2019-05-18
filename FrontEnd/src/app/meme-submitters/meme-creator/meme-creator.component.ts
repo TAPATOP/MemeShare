@@ -37,8 +37,7 @@ export class MemeCreatorComponent implements OnInit, MemeSubmitter {
       return;
     }
     const file: File = fileHolder[0];
-    const memeFileName = title + '.' + file.name.split('.').pop();
-    this.memeSubmitService.prepareImage(file, memeFileName);
+    this.memeSubmitService.prepareImage(file, title);
     this.memeSubmitService.create().subscribe(
       () => console.log('Success!'),
       (error) => console.log(error),
