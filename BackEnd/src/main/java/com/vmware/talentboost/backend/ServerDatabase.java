@@ -23,9 +23,9 @@ public class ServerDatabase {
 //        }
 //    }
 
-    public void insertMeme(Meme meme) {
+    public void insertMeme(String title, String publicUrl, String absolutePath) {
         String sql = "INSERT INTO records (title, public_url, absolute_path) values (?, ?, ?)";
-        jdbcTemplate.update(sql, meme.getTitle(), meme.getImage(), meme.getAbsolutePath());
+        jdbcTemplate.update(sql, title, publicUrl, absolutePath);
         jdbcTemplate.queryForList(
                 "select title from records",
                 String.class
@@ -45,6 +45,33 @@ public class ServerDatabase {
                 "select * from records where id like ?",
                 new MemeMapper(),
                 id);
+    }
+
+    public boolean removeMeme(int id) {
+        Integer result = jdbcTemplate.update(
+                "delete from records where id=?",
+                id
+        );
+        return result > 0;
+    }
+
+    public boolean renameMeme(int id, String newTitle) {
+        Integer result = jdbcTemplate.update(
+                "update records set title=? where id=?",
+                id
+        );
+        return result > 0;
+    }
+
+    public boolean editMeme(int memeID, String title, String publicURL, String absolutePath) {
+        Integer result = jdbcTemplate.update(
+                "update records set title=?, public_url=?, absolute_path=? where id=?",
+                title,
+                publicURL,
+                absolutePath,
+                memeID
+        );
+        return result > 0;
     }
 
     public String getCapitalOf(String country) {

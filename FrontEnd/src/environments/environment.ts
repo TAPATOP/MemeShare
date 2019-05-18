@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  domainsHost: 'http://www.mocky.io/v2/5cdd6620300000de7be237cc',
-  homeDomain: 'http://www.mocky.io/v2/5ccffa323200009b4400f95d'
+  domainsHost: 'http://www.mocky.io/v2/5cdf54a83000005a00430d67',
+  homeDomain: 'http://www.mocky.io/v2/5cdf54983000006000430d66'
 };
 
 /*

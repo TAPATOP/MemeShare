@@ -7,17 +7,14 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import com.vmware.talentboost.backend.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -58,15 +55,10 @@ public class MemeServerController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteMeme(
-            @RequestParam(value="meme-title") String memeTitle
+            @RequestParam(value="id") int id
     ) {
-        if (memeTitle.equals("")) {
-            System.out.println("Empty meme for deletion title");
-            return ResponseEntity.status(400).body("Empty meme for deletion title");
-        }
-
         try {
-            memeModel.deleteMeme(memeTitle);
+            memeModel.deleteMeme(id);
         } catch (MemeDoesntExistException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         } catch (FileCouldntBeDeletedException e) {
@@ -74,7 +66,7 @@ public class MemeServerController {
             return ResponseEntity.status(409).body(e.getMessage());
         }
 
-        String body = memeTitle + " successfully deleted!";
+        String body = id + " successfully deleted!";
         System.out.println("RIP meme");
         return ResponseEntity.ok().body(body);
     }
@@ -99,7 +91,7 @@ public class MemeServerController {
     @PutMapping("/edit")
     public ResponseEntity<String> updateMeme(
             @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam(value = "id", required = false) String id,
+            @RequestParam(value = "id", required = false) int id,
             @RequestParam(value = "title", required = false) String newTitle
     ) {
         if (file == null) {
@@ -125,25 +117,45 @@ public class MemeServerController {
         return ResponseEntity.ok().body("Successful edit");
     }
 
-    private void renameMeme(String id, String newTitle) throws CannotRenameMemeException {
-        memeModel.renameFile(id, newTitle);
+    private void renameMeme(int id, String newTitle) throws CannotRenameMemeException {
+        memeModel.changeMemeTitle(id, newTitle);
     }
 
-    private void replaceMeme(MultipartFile file, String id, String newTitle) throws IOException, MemeDoesntExistException, FileCouldntBeDeletedException {
-        memeModel.createMeme(file, newTitle);
-        System.out.println("Created meme");
-        try {
-            memeModel.deleteMeme(id);
-        } catch (MemeDoesntExistException | FileCouldntBeDeletedException e) {
-            System.out.println("oof, backpedalling");
-            memeModel.deleteMeme(newTitle); // hopefully this reverses the changes, similar to a transaction
-            throw e;
-        }
-        System.out.println("Alles klaar");
+    private void replaceMeme(MultipartFile file, int id, String newTitle) throws IOException, MemeDoesntExistException, FileCouldntBeDeletedException {
+//        memeModel.createMeme(file, newTitle);
+//        System.out.println("Created meme");
+//        try {
+//            memeModel.deleteMeme(id);
+//        } catch (MemeDoesntExistException | FileCouldntBeDeletedException e) {
+//            System.out.println("oof, backpedalling");
+//            memeModel.deleteMeme(newTitle); // hopefully this reverses the changes, similar to a transaction
+//            throw e;
+//        }
+//        System.out.println("Alles klaar");
+//        File replacingFile = memeModel.createFile(file, newTitle);
+//        Meme memeForUpdate = memeModel.getMeme(id);
+//        try {
+//            memeModel.deleteFile(new File(memeForUpdate.getAbsolutePath()));
+//        } catch (FileCouldntBeDeletedException e) {
+//            memeModel.deleteFile(replacingFile);
+//            e.printStackTrace();
+//        }
+//        memeModel.
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void register() throws CannotGetOwnIPException {
+        try {
+            for(Meme meme : memeModel.getMemes()) {
+                System.out.println(meme.getId());
+                System.out.println(meme.getTitle());
+                System.out.println(meme.getImage());
+                System.out.println(meme.getAbsolutePath());
+                System.out.println("==================");
+            }
+        } catch (NoMemesFoundException e) {
+            System.out.println("Oof");
+        }
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

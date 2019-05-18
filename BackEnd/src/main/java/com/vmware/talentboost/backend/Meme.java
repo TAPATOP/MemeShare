@@ -6,11 +6,13 @@ import java.io.IOException;
 
 public class Meme {
 
+    private final int id;
     private String title;
     private String image;
     private String absolutePath;
 
-    public Meme(String title, String image, String absolutePath) {
+    public Meme(int id, String title, String image, String absolutePath) {
+        this.id = id;
         this.title = title;
         this.image = image;
         this.absolutePath = absolutePath;
@@ -28,7 +30,11 @@ public class Meme {
         return absolutePath;
     }
 
-    public void rename(String publicPath, String absolutePath) {
+    public int getId() {
+        return id;
+    }
+
+    public void changeFile(String publicPath, String absolutePath) {
         this.image = publicPath;
         this.absolutePath = absolutePath;
     }

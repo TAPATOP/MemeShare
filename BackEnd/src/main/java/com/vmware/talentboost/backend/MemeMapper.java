@@ -11,6 +11,7 @@ public class MemeMapper implements RowMapper<Meme> {
     @Override
     public Meme mapRow(ResultSet resultSet, int i) throws SQLException {
         return new Meme(
+                resultSet.getInt("id"),
                 resultSet.getString("title"),
                 resultSet.getString("public_url"),
                 resultSet.getString("absolute_path")

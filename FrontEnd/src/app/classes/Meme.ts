@@ -1,8 +1,10 @@
 export class Meme {
+  readonly id: number;
   private title: string;
   private imageURL: string;
 
-  constructor(title: string, imageURL: string) {
+  constructor(id: number, title: string, imageURL: string) {
+    this.id = id;
     this.title = title;
     this.imageURL = imageURL;
   }
@@ -13,5 +15,9 @@ export class Meme {
 
   getImageURL() {
     return this.imageURL;
+  }
+
+  getID() {
+    return this.id;
   }
 }

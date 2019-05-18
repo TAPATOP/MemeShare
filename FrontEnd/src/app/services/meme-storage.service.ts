@@ -5,7 +5,7 @@ import {Meme} from '../classes/Meme';
 import {DomainService} from './domain.service';
 import {ItskoResponse, Status} from '../classes/ItskoResponse';
 
-type rawMeme = Array<{title, image}>;
+type rawMeme = Array<{id: number, title: string, image: string}>;
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class MemeStorageService {
     return this.http.get(getRequest).subscribe((response: rawMeme) => {
       this.memes = [];
       for (const meme of response) {
-        this.memes.push(new Meme(meme.title, meme.image));
+        this.memes.push(new Meme(meme.id, meme.title, meme.image));
       }
       this.loadedMemesEmitter.emit();
     });
@@ -53,7 +53,7 @@ export class MemeStorageService {
   }
 
   deleteMeme(meme: Meme): ItskoResponse {
-    const url = `${this.domainService.getCurrentDomain().getAddress()}/delete?meme-title=${meme.getTitle()}`;
+    const url = `${this.domainService.getCurrentDomain().getAddress()}/delete?id=${meme.getID()}`;
     console.log(url);
     this.http.delete(url)
       .subscribe(

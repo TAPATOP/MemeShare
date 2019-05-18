@@ -13,14 +13,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class MemeModel {
-    private Map<String, Meme> memes;
+//    private Map<String, Meme> memes;
     private String memesSource;
     private ServerDatabase database;
 
@@ -29,35 +27,35 @@ public class MemeModel {
             @Value("${my.memes.location}") String memeLocation,
             ServerDatabase database
     ) {
-        memes = new HashMap<>();
+//        memes = new HashMap<>();
         memesSource = memeLocation;
         this.database = database;
-        loadMemes();
+//        loadMemes();
     }
 
-    private void loadMemes() {
-        File folder = new File(memesSource);
-        File[] files = folder.listFiles();
-        if (files == null) {
-            System.out.println("Warning: No memes found");
-            return;
-        }
-        makeMemes(files);
-    }
+//    private void loadMemes() {
+//        File folder = new File(memesSource);
+//        File[] files = folder.listFiles();
+//        if (files == null) {
+//            System.out.println("Warning: No memes found");
+//            return;
+//        }
+//        makeMemes(files);
+//    }
 
-    private void makeMemes(File[] files) {
-        for (File file : files) {
-            if (file.isFile()) {
-                String url = generateMemePublicURL(file.getName());
-                String memeTitle = removeFileExtension(file.getName());
-                Meme meme = new Meme(memeTitle, url, file.getAbsolutePath());
-                memes.put(memeTitle, meme);
-                /** enable this in case you're starting this for the first time and
-                * already have images in your memes folder */
-//                database.insertMeme(meme);
-            }
-        }
-    }
+//    private void makeMemes(File[] files) {
+//        for (File file : files) {
+//            if (file.isFile()) {
+//                String url = generateMemePublicURL(file.getName());
+//                String memeTitle = removeFileExtension(file.getName());
+//                Meme meme = new Meme(memeTitle, url, file.getAbsolutePath());
+//                memes.put(memeTitle, meme);
+//                /** enable this in case you're starting this for the first time and
+//                * already have images in your memes folder */
+////                database.insertMeme(meme);
+//            }
+//        }
+//    }
 
     private String generateMemePublicURL(String fileName) {
         return "http://localhost:8080/memes/" + fileName;
@@ -71,15 +69,15 @@ public class MemeModel {
         return memes.toArray(new Meme[0]);
     }
 
-    public Meme getMeme(String memeName) throws MemeDoesntExistException {
-        Meme meme = memes.get(memeName);
+    public Meme getMeme(int id) throws MemeDoesntExistException {
+        Meme meme = database.getMeme(id);
         if(meme == null) {
-            throw new MemeDoesntExistException("This meme doesnt exist");
+            throw new MemeDoesntExistException("This meme doesn't exist");
         }
         return meme;
     }
 
-    public void deleteMeme(String id) throws MemeDoesntExistException, FileCouldntBeDeletedException {
+    public void deleteMeme(int id) throws MemeDoesntExistException, FileCouldntBeDeletedException {
         Meme meme = getMeme(id);
         String fileRealURL = meme.getAbsolutePath();
         System.out.println(fileRealURL);
@@ -87,7 +85,7 @@ public class MemeModel {
         if(!fileForDeletion.delete()) {
             throw new FileCouldntBeDeletedException("Couldn't delete " + fileRealURL);
         }
-        memes.remove(id);
+        database.removeMeme(id);
     }
 
     public void createMeme(MultipartFile file, String title) throws IOException {
@@ -99,23 +97,47 @@ public class MemeModel {
                 file.getInputStream(),
                 Paths.get(fileAbsolutePath)
         );
-        memes.put(title, new Meme(title, filePublicPath, fileAbsolutePath));
+        database.insertMeme(title, filePublicPath, fileAbsolutePath);
+    }
+
+    // TODO: Extension instead of title
+    public File createFile(MultipartFile file, String title) throws IOException {
+        String filePublicPath = createRandomFileName(title);
+        System.out.println("Trying to create a file here: " + filePublicPath);
+
+        File newFile = new File(filePublicPath);
+        Files.copy(
+                file.getInputStream(),
+                Paths.get(newFile.getAbsolutePath())
+        );
+        return newFile;
+    }
+
+    public void deleteFile(File file) throws FileCouldntBeDeletedException {
+        if (!file.delete()) {
+            throw new FileCouldntBeDeletedException("Couldn't delete the file");
+        }
+    }
+
+    private String createRandomFileName(String title) {
+        SimpleDateFormat date = new SimpleDateFormat("File-ddMMyy-hhmmss.SSS.txt");
+        Random random = new Random();
+        String randomName = String.format("%s.%s", date.format( new Date() ),
+                random.nextInt(9));
+        return memesSource + '\\' + randomName + getFileExtension(title);
     }
 
     private String removeFileExtension(String fileName) {
         return fileName.substring(0, fileName.lastIndexOf('.'));
     }
 
-    public void renameFile(String identifier, String newName) throws CannotRenameMemeException {
-        Meme memeForRenaming = memes.get(identifier);
-        File fileForRenaming = new File(memeForRenaming.getAbsolutePath());
-        String newFileNamePath = fileForRenaming.getParent() + '\\' + newName + getFileExtension(fileForRenaming.getName());
-        if (!fileForRenaming.renameTo(new File(newFileNamePath))) {
-            throw new CannotRenameMemeException("Cannot rename this file");
-        }
-        String filePublicPath = memesSource + '\\' + newName;
-        memeForRenaming.rename(filePublicPath, newFileNamePath);
+    public void changeMemeTitle(int id, String newTitle) throws CannotRenameMemeException {
+        database.renameMeme(id, newTitle);
     }
+
+//    public void changeMemeFile(int id, File file, String title) {
+//        database.editMeme(id, title, memesSource + '\\' + generateMemePublicURL(file), file.getAbsolutePath());
+//    }
 
     private String getFileExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf('.'), fileName.length());
