@@ -34,11 +34,6 @@ public class Meme {
         return id;
     }
 
-    public void changeFile(String publicPath, String absolutePath) {
-        this.image = publicPath;
-        this.absolutePath = absolutePath;
-    }
-
     public static String JSONify(Meme[] memes) {
         ObjectMapper mapperObj = new ObjectMapper();
         String jsonStr = null;

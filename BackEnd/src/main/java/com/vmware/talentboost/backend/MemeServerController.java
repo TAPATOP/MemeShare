@@ -136,16 +136,6 @@ public class MemeServerController {
             throw new FileCouldntBeDeletedException("I couldn't delete the old meme");
         }
         memeModel.updateMeme(id, newTitle, fileForReplacement);
-//        System.out.println("Alles klaar");
-//        File replacingFile = memeModel.copyFileOntoServer(file, newTitle);
-//        Meme memeForUpdate = memeModel.getMeme(id);
-//        try {
-//            memeModel.deleteFile(new File(memeForUpdate.getAbsolutePath()));
-//        } catch (FileCouldntBeDeletedException e) {
-//            memeModel.deleteFile(replacingFile);
-//            e.printStackTrace();
-//        }
-//        memeModel.
     }
 
     @EventListener(ApplicationReadyEvent.class)

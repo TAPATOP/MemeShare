@@ -30,32 +30,7 @@ public class MemeModel {
         this.memesSource = memeLocation;
         this.publicMemesRoot = publicRoot;
         this.database = database;
-//        loadMemes();
     }
-
-//    private void loadMemes() {
-//        File folder = new File(memesSource);
-//        File[] files = folder.listFiles();
-//        if (files == null) {
-//            System.out.println("Warning: No memes found");
-//            return;
-//        }
-//        makeMemes(files);
-//    }
-
-//    private void makeMemes(File[] files) {
-//        for (File file : files) {
-//            if (file.isFile()) {
-//                String url = generateMemePublicURL(file.getName());
-//                String memeTitle = removeFileExtension(file.getName());
-//                Meme meme = new Meme(memeTitle, url, file.getAbsolutePath());
-//                memes.put(memeTitle, meme);
-//                /** enable this in case you're starting this for the first time and
-//                * already have images in your memes folder */
-////                database.insertMeme(meme);
-//            }
-//        }
-//    }
 
     private String generateMemePublicURL(String fileName) {
         return publicMemesRoot + '/' + fileName;
@@ -119,10 +94,6 @@ public class MemeModel {
         return filename + '.' + extension;
     }
 
-    private String removeFileExtension(String fileName) {
-        return fileName.substring(0, fileName.lastIndexOf('.'));
-    }
-
     public void updateMeme(int memeID, String title, File file) {
         database.editMeme(
                 memeID,
@@ -134,13 +105,5 @@ public class MemeModel {
 
     public void changeMemeTitle(int id, String newTitle) throws CannotRenameMemeException {
         database.renameMeme(id, newTitle);
-    }
-
-//    public void changeMemeFile(int id, File file, String title) {
-//        database.editMeme(id, title, memesSource + '\\' + generateMemePublicURL(file), file.getAbsolutePath());
-//    }
-
-    private String getFileExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf('.'), fileName.length());
     }
 }
