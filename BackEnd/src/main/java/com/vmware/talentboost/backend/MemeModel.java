@@ -4,6 +4,7 @@ import com.vmware.talentboost.backend.exceptions.CannotRenameMemeException;
 import com.vmware.talentboost.backend.exceptions.FileCouldntBeDeletedException;
 import com.vmware.talentboost.backend.exceptions.MemeDoesntExistException;
 import com.vmware.talentboost.backend.exceptions.NoMemesFoundException;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -89,23 +90,20 @@ public class MemeModel {
     }
 
     public void createMeme(MultipartFile file, String title) throws IOException {
-        String filePublicPath = memesSource + '\\' + title;
-        File newFile = new File(filePublicPath);
+        File newFile = createFile(file, title);
         String fileAbsolutePath = newFile.getAbsolutePath();
         System.out.println("Creating here: " + fileAbsolutePath);
-        Files.copy(
-                file.getInputStream(),
-                Paths.get(fileAbsolutePath)
-        );
-        database.insertMeme(title, filePublicPath, fileAbsolutePath);
+        String publicPathName = generateMemePublicURL(newFile.getName());
+        database.insertMeme(title, publicPathName, fileAbsolutePath);
     }
 
     // TODO: Extension instead of title
     public File createFile(MultipartFile file, String title) throws IOException {
-        String filePublicPath = createRandomFileName(title);
-        System.out.println("Trying to create a file here: " + filePublicPath);
+        String randomName = createRandomFileName(title);
+        System.out.println("Trying to create a file here: " + randomName);
 
-        File newFile = new File(filePublicPath);
+        File newFile = new File(memesSource + '\\' + randomName);
+        System.out.println("this is file absolute:" + newFile.getAbsolutePath());
         Files.copy(
                 file.getInputStream(),
                 Paths.get(newFile.getAbsolutePath())
@@ -120,11 +118,15 @@ public class MemeModel {
     }
 
     private String createRandomFileName(String title) {
-        SimpleDateFormat date = new SimpleDateFormat("File-ddMMyy-hhmmss.SSS.txt");
-        Random random = new Random();
-        String randomName = String.format("%s.%s", date.format( new Date() ),
-                random.nextInt(9));
-        return memesSource + '\\' + randomName + getFileExtension(title);
+//        SimpleDateFormat date = new SimpleDateFormat("File-ddMMyy-hhmmss.SSS.txt");
+//        Random random = new Random();
+//        String randomName = String.format("%s.%s", date.format( new Date() ),
+//                random.nextInt(9));
+//        return memesSource + '\\' + randomName + getFileExtension(title);
+        String filename = "";
+        long millis = System.currentTimeMillis();
+        filename = Long.toString(millis);
+        return filename + getFileExtension(title);
     }
 
     private String removeFileExtension(String fileName) {
