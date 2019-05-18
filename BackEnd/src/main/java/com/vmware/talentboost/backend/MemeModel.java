@@ -116,11 +116,11 @@ public class MemeModel {
         }
     }
 
-    private String createRandomFileName(String title) {
+    private String createRandomFileName(String extension) {
         String filename = "";
         long millis = System.currentTimeMillis();
         filename = Long.toString(millis);
-        return filename + title;
+        return filename + '.' + extension;
     }
 
     private String removeFileExtension(String fileName) {
