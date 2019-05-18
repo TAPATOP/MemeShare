@@ -92,6 +92,7 @@ public class MemeServerController {
     @PutMapping("/edit")
     public ResponseEntity<String> updateMeme(
             @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "extension", required = false) String extension,
             @RequestParam(value = "id", required = false) int id,
             @RequestParam(value = "title", required = false) String newTitle
     ) {
@@ -104,10 +105,7 @@ public class MemeServerController {
             }
         } else {
             try {
-                replaceMeme(file, id, newTitle);
-            } catch (FileAlreadyExistsException exists) {
-                return ResponseEntity.status(501)
-                        .body("New file name taken. The fix of this is to be implemented via a database");
+                replaceMeme(file, id, newTitle, extension);
             } catch (IOException | FileCouldntBeDeletedException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(500).body("Cannot edit right now");
@@ -122,18 +120,24 @@ public class MemeServerController {
         memeModel.changeMemeTitle(id, newTitle);
     }
 
-    private void replaceMeme(MultipartFile file, int id, String newTitle) throws IOException, MemeDoesntExistException, FileCouldntBeDeletedException {
-//        memeModel.createMeme(file, newTitle);
-//        System.out.println("Created meme");
-//        try {
-//            memeModel.deleteMeme(id);
-//        } catch (MemeDoesntExistException | FileCouldntBeDeletedException e) {
-//            System.out.println("oof, backpedalling");
-//            memeModel.deleteMeme(newTitle); // hopefully this reverses the changes, similar to a transaction
-//            throw e;
-//        }
+    private void replaceMeme(MultipartFile file, int id, String newTitle, String extension) throws IOException, MemeDoesntExistException, FileCouldntBeDeletedException {
+        assert(file != null);
+        File newFile = memeModel.copyFileOntoServer(file, extension);
+        System.out.println("Created meme");
+        File fileForReplacement;
+        try {
+            fileForReplacement = new File(memeModel.getMeme(id).getAbsolutePath());
+            memeModel.deleteFile(fileForReplacement);
+        } catch (MemeDoesntExistException e) {
+            memeModel.deleteFile(newFile); // hopefully this reverses the changes, similar to a transaction
+            throw new MemeDoesntExistException("You cannot delete a meme that doesn't exist");
+        } catch (FileCouldntBeDeletedException e) {
+            memeModel.deleteFile(newFile); // hopefully this reverses the changes, similar to a transaction
+            throw new FileCouldntBeDeletedException("I couldn't delete the old meme");
+        }
+        memeModel.updateMeme(id, newTitle, fileForReplacement);
 //        System.out.println("Alles klaar");
-//        File replacingFile = memeModel.createFile(file, newTitle);
+//        File replacingFile = memeModel.copyFileOntoServer(file, newTitle);
 //        Meme memeForUpdate = memeModel.getMeme(id);
 //        try {
 //            memeModel.deleteFile(new File(memeForUpdate.getAbsolutePath()));

@@ -1,9 +1,9 @@
 export class Meme {
-  readonly id: number;
+  readonly id: string; // just json stuff(?)
   private title: string;
   private imageURL: string;
 
-  constructor(id: number, title: string, imageURL: string) {
+  constructor(id: string, title: string, imageURL: string) {
     this.id = id;
     this.title = title;
     this.imageURL = imageURL;

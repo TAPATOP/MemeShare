@@ -4,7 +4,6 @@ import com.vmware.talentboost.backend.exceptions.CannotRenameMemeException;
 import com.vmware.talentboost.backend.exceptions.FileCouldntBeDeletedException;
 import com.vmware.talentboost.backend.exceptions.MemeDoesntExistException;
 import com.vmware.talentboost.backend.exceptions.NoMemesFoundException;
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,22 +13,22 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
 public class MemeModel {
-//    private Map<String, Meme> memes;
     private String memesSource;
+    private String publicMemesRoot;
     private ServerDatabase database;
 
     @Autowired
     MemeModel(
             @Value("${my.memes.location}") String memeLocation,
+            @Value("${meme.folder.public.root}") String publicRoot,
             ServerDatabase database
     ) {
-//        memes = new HashMap<>();
-        memesSource = memeLocation;
+        this.memesSource = memeLocation;
+        this.publicMemesRoot = publicRoot;
         this.database = database;
 //        loadMemes();
     }
@@ -59,7 +58,7 @@ public class MemeModel {
 //    }
 
     private String generateMemePublicURL(String fileName) {
-        return "http://localhost:8080/memes/" + fileName;
+        return publicMemesRoot + '/' + fileName;
     }
 
     public Meme[] getMemes() throws NoMemesFoundException {
@@ -82,22 +81,25 @@ public class MemeModel {
         Meme meme = getMeme(id);
         String fileRealURL = meme.getAbsolutePath();
         System.out.println(fileRealURL);
-        File fileForDeletion = new File(fileRealURL); // TODO: check if this is replaceable
-        if(!fileForDeletion.delete()) {
-            throw new FileCouldntBeDeletedException("Couldn't delete " + fileRealURL);
-        }
+        File fileForDeletion = new File(fileRealURL);
+        deleteFile(fileForDeletion);
         database.removeMeme(id);
     }
 
+    public void deleteFile(File file) throws FileCouldntBeDeletedException {
+        if (!file.delete()) {
+            throw new FileCouldntBeDeletedException("Couldn't delete the file");
+        }
+    }
+
     public void createMeme(MultipartFile file, String title, String extension) throws IOException {
-        File newFile = createFile(file, extension);
+        File newFile = copyFileOntoServer(file, extension);
         String fileAbsolutePath = newFile.getAbsolutePath();
-        System.out.println("Creating here: " + fileAbsolutePath);
         String publicPathName = generateMemePublicURL(newFile.getName());
         database.insertMeme(title, publicPathName, fileAbsolutePath);
     }
 
-    public File createFile(MultipartFile file, String extention) throws IOException {
+    public File copyFileOntoServer(MultipartFile file, String extention) throws IOException {
         String randomName = createRandomFileName(extention);
         System.out.println("Trying to create a file here: " + randomName);
 
@@ -110,12 +112,6 @@ public class MemeModel {
         return newFile;
     }
 
-    public void deleteFile(File file) throws FileCouldntBeDeletedException {
-        if (!file.delete()) {
-            throw new FileCouldntBeDeletedException("Couldn't delete the file");
-        }
-    }
-
     private String createRandomFileName(String extension) {
         String filename = "";
         long millis = System.currentTimeMillis();
@@ -125,6 +121,15 @@ public class MemeModel {
 
     private String removeFileExtension(String fileName) {
         return fileName.substring(0, fileName.lastIndexOf('.'));
+    }
+
+    public void updateMeme(int memeID, String title, File file) {
+        database.editMeme(
+                memeID,
+                title,
+                generateMemePublicURL(file.getName()),
+                file.getAbsolutePath()
+        );
     }
 
     public void changeMemeTitle(int id, String newTitle) throws CannotRenameMemeException {

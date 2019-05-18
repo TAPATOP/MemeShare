@@ -5,7 +5,7 @@ import {Meme} from '../classes/Meme';
 import {DomainService} from './domain.service';
 import {ItskoResponse, Status} from '../classes/ItskoResponse';
 
-type rawMeme = Array<{id: number, title: string, image: string}>;
+type rawMeme = Array<{id: string, title: string, image: string}>;
 
 @Injectable({
   providedIn: 'root'

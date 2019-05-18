@@ -70,6 +70,6 @@ export class MemeContainerComponent implements OnInit {
 
   editMeme(meme: Meme) {
     this.submitterService.setTitle(meme.getTitle());
-    this.submitterService.setID(meme.getTitle());
+    this.submitterService.setID(meme.getID());
   }
 }

@@ -58,6 +58,7 @@ public class ServerDatabase {
     public boolean renameMeme(int id, String newTitle) {
         Integer result = jdbcTemplate.update(
                 "update records set title=? where id=?",
+                newTitle,
                 id
         );
         return result > 0;
