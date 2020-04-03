@@ -1,4 +1,6 @@
-This is the final project for the 2019 edition of VMware's TalentBoost.
+#MemeShare
+
+This is the final project for the 2019 edition of VMware's TalentBoost. Angular + Spring
 
 It is a meme sharing platform implemented by Angular and Spring( using MySQL via JDBC). It's a full- stack application and offers the following functionalities:
 - image uploading
