@@ -1,4 +1,4 @@
-#MemeShare
+# MemeShare
 
 This is the final project for the 2019 edition of VMware's TalentBoost. Angular + Spring
 
